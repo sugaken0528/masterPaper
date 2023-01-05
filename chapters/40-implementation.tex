@@ -283,19 +283,19 @@ VGMLの教師データの判定結果はUNNECESSARY、NONCLASS、CLASS のいず
         \end{itemize}
 \end{itemize}
 
-表\ref{table:data_set}に、教師あり学習のデータセット数を示す。
+表\ref{table:vgml_data_set}に、VGMLにおける教師あり学習のデータセット数を示す。
 
 \begin{table}[t]
     \begin{center}
-      \caption{教師データのデータセット数}
-      \label{table:data_set}
+      \caption{VGMLにおける教師データのデータセット数}
+      \label{table:vgml_data_set}
       \begin{tabular}{c|c}
-        データ総数　& 331\\
+        データ総数　& 168\\
         \hline
         \hline
-        CLASS    & 39\\ \hline
-        NONCLASS & 157\\ \hline
-        UNNECESSARY   & 135\\ \hline
+        CLASS    & 5\\ \hline
+        NONCLASS & 79\\ \hline
+        UNNECESSARY   & 84\\ \hline
       \end{tabular}
     \end{center}
   \end{table}
@@ -745,7 +745,7 @@ VGMLのVDM++仕様書生成部におけるVDM++仕様書生成処理の流れを
     \item クラス毎識別子リストの1行目を読み込む。
     \label{read_class}
     \item \ref{vdm_file}で用意したファイルに、「class \textless \ref{read_class}の行の2列目の要素 \textgreater」を追加する。
-    \item \ref{vdm_file}で用意したファイルに、表\ref{vdm_syntax}のVDM++の各ブロック「types」「instance variables」、「operations」、「functions」を追加する。
+    \item \ref{vdm_file}で用意したファイルに、表\ref{table:vdm_syntax}のVDM++の各ブロック「types」「instance variables」、「operations」、「functions」を追加する。
     \label{add_sikibetushi}
     \item クラス毎識別子リスト内の2行目以降の行に対し、以下の処理を繰り返す。
         \begin{enumerate}
@@ -755,8 +755,8 @@ VGMLのVDM++仕様書生成部におけるVDM++仕様書生成処理の流れを
                 \begin{enumerate}
                     \item \ref{shikibetu_elem}の行の2列目の要素である単語の文字列から、\ref{read_class}で読み込んだ行の2列目の要素である、クラスの候補である単語の文字列を除いた単語を生成する。
                     \label{read_kata}
-                    \item \ref{add_sikibetushi}で追加した「types」の次の行に、表{\ref{vdm_syntax}}の構文に従って、\ref{read_kata}で生成した単語をVDM++仕様書の構文の「名前」に挿入する。
-                    \item \ref{add_sikibetushi}で追加した「instance variables」の次の行に、表\ref{vdm_syntax}の構文に従って、\ref{shikibetu_elem}の行の2列目の要素をVDM++仕様書の構文の「名前」に、\ref{read_kata}で生成した単語をVDM++仕様書の構文の「型」に挿入する。
+                    \item \ref{add_sikibetushi}で追加した「types」の次の行に、表{\ref{table:vdm_syntax}}の構文に従って、\ref{read_kata}で生成した単語をVDM++仕様書の構文の「名前」に挿入する。
+                    \item \ref{add_sikibetushi}で追加した「instance variables」の次の行に、表\ref{table:vdm_syntax}の構文に従って、\ref{shikibetu_elem}の行の2列目の要素をVDM++仕様書の構文の「名前」に、\ref{read_kata}で生成した単語をVDM++仕様書の構文の「型」に挿入する。
                 \end{enumerate}
             \item \ref{shikibetu_elem}の行の1列目の識別子が「operations」である場合、\ref{add_sikibetushi}で追加した「operations」の次の行に、表{}の構文に従って、\ref{shikibetu_elem}の行の2列目の要素をVDM++仕様書の構文の「名前」に挿入する。
             \item \ref{shikibetu_elem}の行の1列目の識別子が「functions」である場合、\ref{add_sikibetushi}で追加した「functions」の次の行に、表{}の構文に従って、\ref{shikibetu_elem}の行の2列目の要素をVDM++仕様書の構文の「名前」に挿入する。
