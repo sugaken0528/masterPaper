@@ -24,18 +24,16 @@
 
 \section{形態素解析部}
 既存手法における形態素解析部は、wordまたはpdfで記述された自然言語仕様書を入力として、連結リストを出力する。
-既存手法における形態素解析部の構造を、図\ref{fig:exis_mor_structure}に示す。
+既存手法が入力とする自然言語仕様書の例を図\ref{fig:exis_spec_example}に、既存手法における形態素解析部の構造を、図\ref{fig:exis_mor_structure}に示す。
 既存手法における形態素解析部の処理の流れを、以下に示す。
 
 \begin{enumerate}
-    \item テキスト抽出処理において、自然言語仕様書を入力とし、自然言語仕様書内のテキストを抽出する。さらに、抽出したテキストを格納したテキストリストを生成する。
+    \item テキスト抽出処理において、自然言語仕様書を入力とし、自然言語仕様書内のテキストを抽出する。さらに、抽出したテキストを格納したテキストリストを生成する。図\ref{fig:exis_spec_example}に示す仕様書を入力として、既存手法のテキスト抽出処理が生成するテキストリストを、図\ref{fig:exis_text_list}に示す。
     \label{text_list}
-    \item 分かち書き処理において、\ref{text_list}で生成したテキストリストを入力とし、テキストリスト内のテキストを文ごとに分ける。さらに、文を\ref{}節で述べたMecabを用いて分かち書きし、分かち書きした文を格納した分かち書きリストを生成する。
+    \item 分かち書き処理において、\ref{text_list}で生成したテキストリストを入力とし、テキストリスト内のテキストを文ごとに分ける。さらに、文を\ref{}節で述べたMecabを用いて分かち書きし、分かち書きした文を格納した分かち書きリストを生成する。図\ref{fig:text_list}に示すテキストリストを入力として、既存手法の分かち書き処理が生成する分かち書きリストを、図\ref{fig:exis_wakati_list}に示す。
     \label{wakati_list}
-    \item 単語連結処理において、\ref{wakati_list}で生成した分かち書きリストを入力とし、分かち書きリスト内の文の連続する2つ以上の名詞と動詞を連結する。さらに、名詞と動詞を連結した文を格納した連結リストを生成する。
+    \item 単語連結処理において、\ref{wakati_list}で生成した分かち書きリストを入力とし、分かち書きリスト内の助詞、助動詞、接続詞、副詞の品詞である単語を除く。さらに、分かち書きリスト内の文の連続する2つ以上の名詞と動詞を連結する。最後に、名詞と動詞を連結した文を格納した連結リストを生成する。図\ref{fig:wakati_list}に示す分かち書きリストを入力として、既存手法の単語連結処理が生成する連結リストを、図\ref{fig:exis_connect_list}に示す。
 \end{enumerate}
-
-形態素解析部に入力する自然言語仕様書の例を図\ref{fig:exis_spec_example}に、図\ref{fig:exis_spec_example}の仕様書を入力した際に既存手法の形態素解析部が生成する連結リストを図\ref{fig:exis_connect_list}に示す。
 
 \begin{figure}[tp]
     \begin{center}
@@ -48,8 +46,24 @@
 \begin{figure}[tp]
     \begin{center}
         \includegraphics[width=1.0\columnwidth]{image/exis_spec_example.png}
-        \caption{形態素解析部に入力する自然言語仕様書の例}
+        \caption{入力とする自然言語仕様書の例}
         \label{fig:exis_spec_example}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+        \includegraphics[width=1.0\columnwidth]{image/exis_text_list.png}
+        \caption{既存手法のテキスト抽出処理が生成するテキストリスト}
+        \label{fig:exis_test_list}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+        \includegraphics[width=1.0\columnwidth]{image/exis_wakati_list.png}
+        \caption{既存手法の分かち書き処理が生成する分かち書きリスト}
+        \label{fig:exis_wakati_list}
     \end{center}
 \end{figure}
 
@@ -62,6 +76,7 @@
 \end{figure}
 
 \section{変換部}
+\label{sec:exis_transfer}
 既存手法における変換部は、図\ref{fig:exis_connect_list}に示す連結リストを入力として、単語リストを生成する。
 既存手法における変換部の構造を、図\ref{fig:exis_transfer_structure}に示す。
 既存手法における変換部の処理の流れを、以下に示す。
@@ -105,6 +120,7 @@
 \end{figure}
 
 \section{機械学習部}
+\label{sec:exis_machine}
 既存手法における機械学習部は、2つの役割を持つ。1つは、前処理として、教師データを入力とし、学習済みモデルを出力する。
 もう一つは、単語リストと学習済みモデルを入力とし、判定リストを出力する。
 既存手法における機械学習部の構造を、図\ref{fig:exis_machine_structure}に、既存手法の機械学習部が入力とする教師データの一部を、図\ref{fig:exis_teach}に示す。
@@ -170,11 +186,11 @@
 既存手法におけるVDM++仕様書生成部の処理の流れを、以下に示す。
 
 \begin{enumerate}
-    \item 型・定数定義生成処理において、図\ref{fig:exis_suti_list}に示す数値リストと、図\ref{fig:exis_judge_list}に示す判定リストを入力とし、単語または単語と数値のセットを格納した型・定数定義リストを生成する。
+    \item 型・定数定義生成処理において、図\ref{fig:exis_suti_list}に示す数値リストと、図\ref{fig:exis_judge_list}に示す判定リストを入力とし、識別子を挿入するための一時的なID「INDEX」と単語のセット、または「INDEX」、単語、数値のセットを格納した型・定数定義リストを生成する。図\ref{fig:exis_suti_list}と図\ref{fig:exis_judge_list}を入力として、既存手法の型・定数定義生成処理が生成する型・定数定義リストを、図\ref{fig:exis_katateisu_list}に示す。
     \label{katateisu}
-    \item 識別子挿入処理において、\ref{katateisu}で生成した型・定数定義リスト内の単語に、「types」または「values」を識別子として追加する。さらに、識別子と単語のセット、または識別子、単語、数値のセットを格納した型・定数定義識別子リストを生成する。
+    \item 識別子挿入処理において、\ref{katateisu}で生成した型・定数定義リスト内の一時的なID「INDEX」に、「types」または「values」を識別子として挿入する。さらに、識別子と単語のセット、または識別子、単語、数値のセットを格納した型・定数定義識別子リストを生成する。図\ref{fig:exis_katateisu_list}に示す型・定数定義リストを入力として、既存手法の識別子挿入処理が生成する型・定数定義識別子リストを、図\ref{fig:exis_katateisu_id_list}に示す。
     \label{sikibetu}
-    \item VDM++仕様書生成部において、表\ref{table:vdm_syntax}の構文に従って、\ref{sikibetu}で生成した型・定数定義識別子リスト内の単語をVDM++仕様書の構文の「名前」に、数値をVDM++仕様書の構文の「値」に挿入する。さらに、構文に沿って単語と数値を挿入した後の文字列を、ファイルに記述することによってVDM++仕様書を生成する。
+    \item VDM++仕様書生成部において、表\ref{table:vdm_syntax}の構文に従って、\ref{sikibetu}で生成した型・定数定義識別子リスト内の単語をVDM++仕様書の構文の「名前」に、数値をVDM++仕様書の構文の「値」に挿入する。さらに、構文に沿って単語と数値を挿入した後の文字列を、ファイルに記述することによってVDM++仕様書を生成する。図\ref{fig:exis_katateisu_id_list}に示す型・定数定義識別子リストを入力として、既存手法のVDM++仕様書生成処理が生成するVDM++仕様書を、図\ref{fig:exis_vdm}に示す。
 \end{enumerate}
 
 \begin{figure}[tp]
@@ -185,17 +201,33 @@
     \end{center}
 \end{figure}
 
-図\ref{fig:exis_judge_list}に示す判定リストを入力として、既存手法のVDM++仕様書生成部が生成するVDM++仕様書を、図\ref{fig:exis_vdm}に示す。
+\begin{figure}[tp]
+    \begin{center}
+        \includegraphics[width=300]{image/exis_katateisu_list.png}
+        \caption{既存手法の型・定数定義生成処理が生成する型・定数定義リスト}
+        \label{fig:exis_katateisu_list}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+        \includegraphics[width=300]{image/exis_katateisu_id_list.PNG}
+        \caption{既存手法の識別子挿入処理が生成する型・定数定義識別子リスト}
+        \label{fig:exis_katateisu_id_list}
+    \end{center}
+\end{figure}
+
 
 \begin{figure}[tp]
     \begin{center}
         \includegraphics[width=300]{image/exis_vdm.png}
-        \caption{既存手法のVDM++仕様書生成部が生成するVDM++仕様書}
+        \caption{既存手法のVDM++仕様書生成処理が生成するVDM++仕様書}
         \label{fig:exis_vdm}
     \end{center}
 \end{figure}
 
 \section{既存手法の問題点}
+\label{sec:problemm}
 既存手法は、上記の4つの処理部によって、自然言語仕様書内の単語の内、VDM++仕様書に必要な単語を抽出し、VDM++仕様書を自動生成することができる。
 しかし、既存手法は、自然言語仕様書から抽出した単語を、VDM++仕様書に必要である単語と必要でない単語に分類し、型定義と定数定義に対応したVDM++仕様書を出力できるが、
 クラスやその他のブロック定義に対応したVDM++仕様書を出力することができない。そのため、既存手法は、対応しているVDM++の構文が少なく、有用性が低い。

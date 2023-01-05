@@ -1,23 +1,22 @@
 \chapter{VGMLの実装}\label{cha:Implementation}
 
-本研究では、\ref{cha:Function}節で示した、既存手法の課題を解決するために、VDM++仕様書における以下の4つの構文を生成する手法を提案する。
+本研究では、\ref{sec:problem}節で示した、既存手法の課題を解決するために、VDM++仕様書における以下の3つの構文を生成する手法を提案する。
 さらに、提案手法を既存手法に適用し、機械学習を活用したVDM++仕様書自動生成ツールVGMLを開発する。
 
 \begin{itemize}
     \item クラス
     \item インスタンス変数定義
     \item 操作定義
-    \item 関数定義
 \end{itemize}
 
-本研究では、既存手法が生成する型定義と定数定義に加え、上記の4つの構文を生成するために、既存手法に対し以下の5つの処理の改良および追加を行う。
+本研究では、既存手法が生成する型定義と定数定義に加え、上記の3つの構文を生成するために、既存手法に対し以下の5つの処理の改良および追加を行う。
 
 \begin{itemize}
     \item 自然言語仕様書内の分かち書きした単語を連結する処理の改良
     \item クラスを生成する処理の追加
     \item インスタンス変数定義を生成する処理の追加
-    \item 操作・関数定義を生成する処理の追加
-    \item 各定義ブロックの候補である単語をVDM++仕様書に書き込む処理の追加
+    \item 操作定義を生成する処理の追加
+    \item 各定義ブロックの候補である単語をVDM++仕様書に書き込む処理の改良
 \end{itemize}
 
 本研究で開発するVGMLの構造を、図\ref{fig:vgml_structure}に示す。
@@ -47,7 +46,8 @@ VGMLの形態素解析部の構造を、図\ref{fig:vgml_mor_structure}に示す
 
 既存手法の形態素解析部における単語連結処理は、分かち書きリストを入力として読み込み、分かち書きリスト内の単語から助詞、助動詞、接続詞、副詞
 の品詞である単語を除く。さらに、連続する2つ以上の名詞または動詞を連結し、連結した単語を格納した連結リストを生成する。
-既存手法とVGMLの単語連結処理が入力とする分かち書きリストの例を、図\ref{fig:exis_wakati}に、既存手法の単語連結処理が出力する連結リストの例を、図\ref{fig:exis_connect}に示す。
+既存手法とVGMLの分かち書き処理が生成する分かち書きリストの例を図\ref{fig:exis_wakati}に、
+図\ref{fig:exis_wakati}に示す分かち書きリストを入力として、既存手法の単語連結処理が生成する連結リストの例を、図\ref{fig:exis_connect}に示す。
 図\ref{fig:exis_wakati}に示す分かち書きリストを分かち書き処理に入力した場合、図\ref{fig:exis_connect}に示すように、「企業」、「一覧」、「確認」を別の単語として出力する。
 そのため、「企業の一覧を確認する」という意味を持つ単語を抽出することができない。
 したがって、自然言語仕様書から抽出した単語をVDM++仕様書に記述する際に、各構文に対して適切な単語を記述することができない。
@@ -55,7 +55,7 @@ VGMLの形態素解析部の構造を、図\ref{fig:vgml_mor_structure}に示す
 \begin{figure}[t]
     \begin{center}
         \includegraphics[width=1.0\columnwidth]{image/exis_wakati.png}
-        \caption{既存手法とVGMLの単語連結処理が入力とする分かち書きリストの例}
+        \caption{既存手法とVGMLの分かち書き処理が生成する分かち書きリストの例}
         \label{fig:exis_wakati}
     \end{center}
 \end{figure}
@@ -76,11 +76,12 @@ VGMLの形態素解析部の構造を、図\ref{fig:vgml_mor_structure}に示す
     \end{center}
 \end{figure}
 
-VGMLの形態素解析部における単語連結処理は、既存手法が除く品詞が助詞である分かち書きリスト内の単語の内、連体助詞と格助詞に接続する2つの名詞を連結することによって、
+VGMLの形態素解析部における単語連結処理は、既存手法が除く、品詞が助詞である分かち書きリスト内の単語の内、連体助詞と格助詞に接続する2つの名詞を連結することによって、
 上記の問題を解決する。
 図\ref{fig:exis_wakati}に示す分かち書きリストを入力として、VGMLの単語連結処理が生成する連結リストの例を、図\ref{fig:vgml_connect}に示す。
 図\ref{fig:vgml_connect}に示すように、VGMLの単語連結処理は、連体助詞と格助詞に接続する「企業」と「一覧」、「一覧」と「確認」を連結する。
 そのため、「企業の一覧を確認する」という意味を持つ「企業一覧確認」という単語を抽出することができる。
+図\ref{fig:exis_wakati_list}に示す分かち書きリストを入力として、VGMLの単語連結処理が生成する連結リストを、図\ref{vgml_connect_list}に示す。
 
 \section{クラスを生成する処理の追加}
 \label{sec:generate_class}
@@ -94,32 +95,35 @@ VGMLの形態素解析部における単語連結処理は、既存手法が除�
     \item VDM++仕様書生成部にクラス分類処理の追加。
 \end{itemize}
 
-以降、4つの追加した処理部と、改良した処理について詳細を述べる。
+以降、1つの追加した処理部と、4つの改良した処理について詳細を述べる。
 
 \subsection{概念レベルの算出処理部の追加}
 \label{sec:part_calc_concept_level}
-既存手法は、機械学習に必要なパラメータとして、各単語に\ref{}節で述べたTF-IDF値、出現回数、優先値、連結回数の4つの値を追加する。
-また、これらのパラメータを用いた機械学習によって自然言語内の単語を、VDM++仕様書に必要である単語と、必要でない単語に分類することができる。
+既存手法は、機械学習に必要なパラメータとして、各単語に\ref{sec:exis_transfer}節で述べたTF-IDF値、出現回数、優先値、連結回数の4つの値を追加する。
+既存手法は、これらのパラメータを用いた機械学習によって自然言語内の単語を、VDM++仕様書に必要である単語と、必要でない単語に分類することができる。
 
 VGMLは、機械学習に必要なパラメータとして、各単語にTF-IDF値、出現回数、優先値、連結回数に加えて、本論文で新たに定義する概念レベルを追加する(\ref{sec:improve_word_list}節に後述)。
 これにより、機械学習によって自然言語仕様書内の単語を、以下の3つに分類することができる。
 
-\begin{itemize}
+\begin{enumerate}[label=\textbf{\Alph*}.]
     \item VDM++仕様書に必要でない単語
+    \label{unnecessary}
     \item VDM++仕様書に必要であるが、クラスの候補ではない単語
+    \label{nonclass}
     \item VDM++仕様書に必要であり、かつ、クラスの候補である単語
-\end{itemize}
+    \label{class}
+\end{enumerate}
 
-以降、VDM++仕様書に必要でない単語をUNNECESSARY、VDM++仕様書に必要であるが、クラスの候補ではない単語をNONCLASS、
-VDM++仕様書に必要であり、かつ、クラスの候補である単語をCLASSとそれぞれ表現する。
+以降、\ref{unnecessary}の単語をUNNECESSARY、\ref{nonclass}の単語をNONCLASS、
+\ref{class}の単語をCLASSとそれぞれ表現する。
 
 概念レベルの計算は、\ref{}節で述べた日本語WordNetを用いて、解析対象である単語の同義語とその下位概念の関係を表す木構造を生成する。
 単語の下位概念の関係を表す木構造の例を、図\ref{fig:tree_structure}に示す。図\ref{fig:tree_structure}は、"りんご"の文字列を入力した際の木構造の例である。
 日本語WordNetは、日本語での入力に対応しているが、出力する概念を表す単語は英語表記であるため、木構造を構成する単語も英語表記となる。
 図\ref{fig:tree_structure}の木構造の場合、りんごの概念を持つ同義語を最上位のノードとし、その下位概念である単語を子ノードとして表現する。
 概念レベル算出部の構造を、図\ref{fig:vgml_concept_level_structure}に示す。
-概念レベル算出部の同義語検索処理は、入力として受け取った単語と同じ概念を持つ単語を検索し、検索した単語を格納した同義語リストを生成する。
 概念レベル算出部は、1つの単語を入力として読み込み、算出した概念レベルを返す。
+概念レベル算出部の同義語検索処理は、入力として受け取った単語と同じ概念を持つ単語を検索し、検索した単語を格納した同義語リストを生成する。
 概念レベル算出部の処理の流れの例を図\ref{fig:flow_calc_concept_level}に、概念レベル算出部の処理の流れの説明を以下に示す。
 
 \begin{figure}[t]
@@ -189,12 +193,12 @@ VDM++仕様書に必要であり、かつ、クラスの候補である単語を
 
 \subsection{自然言語仕様書内の単語にパラメータを追加する処理の改良}
 \label{sec:improve_word_list}
-既存手法は、図\ref{}に示す変換部において、各単語にTF-IDF値、出現回数、優先値、連結回数の4つの値を追加する。
-さらに、図\ref{}に示す単語リストを生成する。
+既存手法は、図\ref{fig_exis_transfer_structure}に示す変換部において、各単語にTF-IDF値、出現回数、優先値、連結回数の4つの値を追加する。
+さらに、図\ref{fig:exis_word_list}に示す単語リストを生成する。
 既存手法が生成する単語リストは、単語名と、各単語に対して算出した、TF-IDF値、出現回数、優先値、連結回数の4つのパラメータを持つ。
 
-VGMLの変換部の構造を図\ref{fig:vgml_transfer}に、VGMLが生成する単語リストの例を図\ref{fig:vgml_word_list}にそれぞれ示す。
-VGMLの変換部における概念レベル生成処理は、図\ref{}に示す既存手法が生成する連結リストを、列数5の一時ファイルとして入力する。
+VGMLの変換部の構造を図\ref{fig:vgml_transfer}に、図\ref{fig:exis_spec_example}の仕様書を基にVGMLが生成する単語リストの一部を図\ref{fig:vgml_word_list}にそれぞれ示す。
+VGMLの変換部における概念レベル生成処理は、図\ref{fig:exis_connect_list}に示す既存手法が生成する連結リストを、列数5の一時ファイルとして入力する。
 さらに、\ref{sec:part_calc_concept_level}節で述べた様に、図\ref{fig:vgml_concept_level_structure}に示す概念レベル算出部において、本論文で新たに定義する概念レベルを計算する。
 最後に、変換部の概念レベル生成処理において、列数5の一時ファイルに概念レベルを追加することによって、図\ref{fig:vgml_word_list}に示す単語リストを生成する。
 VGMLが生成する単語リストは、単語名と、各単語に対して算出した、TF-IDF値、出現回数、優先値、連結回数、概念レベルの5つのパラメータを持つ。
@@ -221,7 +225,7 @@ VGMLが生成する単語リストは、単語名と、各単語に対して算�
 
 \begin{itemize}
     \item 概念レベルの値が大きすぎる単語(``システム''など)は、VDM++仕様書に必要でない単語の可能性が高い。
-    \item 概念レベルの値が小さすぎる単語 (``ID''、``パスワード''など)は、VDM++仕様書に必要でない単語である可能性が高い。しかし、クラスの候補となる単語に接続する場合、そのクラスが持つインスタンス変数となる可能性が高い。
+    \item 概念レベルの値が小さすぎる単語 (``id''、``パスワード''など)は、VDM++仕様書に必要でない単語である可能性が高い。しかし、クラスの候補となる単語に接続する場合、そのクラスが持つインスタンス変数となる可能性が高い。
     \item 大きすぎる概念レベルの値と、小さすぎる概念レベルの値の中間程度の概念レベルの値である単語(``企業''、``企業担当者''など)の内、概念レベルの値が大きい単語は、クラスの候補である単語の可能性が高い。
     \item 上記の項目にあてはまらない単語(``年度''など)は、クラスの候補でない単語の可能性が高い。
 \end{itemize}
@@ -239,22 +243,22 @@ VGMLは、上記の特徴に基づいて、各単語をUNNECESSARY、NONCLASS、
 \begin{figure}[t]
     \begin{center}
         \includegraphics[width=1.0\columnwidth]{image/vgml_word_list.png}
-        \caption{VGMLが生成する単語リストの例}
+        \caption{VGMLが生成する単語リストの一部}
         \label{fig:vgml_word_list}
     \end{center}
 \end{figure}
 
 \subsection{機械学習部の学習済みモデルを生成する処理の改良}
 \label{sec:vgml_train_model}
-既存手法における教師データは、図\ref{fig:}に示すように、
+既存手法における教師データは、図\ref{fig:exis_teach}に示すように、
 1列目に単語名、2列目に判定結果、3列目以降に変換部で各単語に追加した TF-IDF値、出現回数、優先値、連結回数を説明変数として持つ。
 判定結果は0か1のいずれかであり、0は1列目の単語がVDM++仕様書に必要でない単語であることを表し、
 1は1列目の単語が VDM++仕様書に必要な単語であることを表す。
 既存手法における前処理としての機械学習部は、自然言語仕様書内の単語を、VDM++仕様書に必要でない単語と、VDM++仕様書に必要な単語の2つの項目に分類するために、
-図\ref{}に示す教師データを入力とし、\ref{sec:}節で述べた二項ロジスティック回帰分析を用いて学習済みモデルを生成する。
+図\ref{fig:exis_teach}に示す教師データを入力とし、\ref{sec:}節で述べた二項ロジスティック回帰分析を用いて学習済みモデルを生成する。
 
 VGMLにおける教師データを、図\ref{fig:vgml_teach}に示す。
-VGMLにおける教師データは、図\ref{}に示した既存手法の教師データに、\ref{sec:part_calc_concept_level}で述べた概念レベルを説明変数として追加する。
+VGMLにおける教師データは、図\ref{fig:exis_teach}に示した既存手法の教師データに、\ref{sec:part_calc_concept_level}で述べた概念レベルを説明変数として追加する。
 VGMLの教師データの判定結果はUNNECESSARY、NONCLASS、CLASS のいずれかである。
 教師データの作成の際に、自然言語仕様書内の各単語に対し、以下のルールに従って人手で判定結果を与えた。
 
@@ -319,21 +323,21 @@ VGMLにおける学習済みモデル生成処理の流れを以下に示す。
 \end{enumerate}
 
 \subsection{自然言語仕様書内の単語を分類する処理の改良}
-既存手法における機械学習部の判定リスト生成処理は、\ref{sec:}で述べたように、変換部で生成した単語リストを入力とし、
+既存手法における機械学習部の判定リスト生成処理は、\ref{sec:exis_machine}で述べたように、変換部で生成した単語リストを入力とし、
 学習済みモデルを使用して判定リストを生成する。
-既存手法における機械学習部の判定リスト生成処理が生成する判定リストは、図\ref{fig:}に示すように、各単語に対しVDM++仕様書に必要な単語であることを表す1、またはVDM++仕様書に必要でない単語であることを表す0のいずれかの値を持つ。
+既存手法における機械学習部の判定リスト生成処理が生成する判定リストは、図\ref{fig:exis_judge_list}に示すように、各単語に対しVDM++仕様書に必要な単語であることを表す1、またはVDM++仕様書に必要でない単語であることを表す0のいずれかの値を持つ。
 
-VGMLにおける機械学習部の判定リスト生成処理は、\ref{sec:improve_word_list}節で述べた単語リストを入力とし、
+VGMLにおける機械学習部の判定リスト生成処理は、図\ref{fig:vgml_word_list}に示す単語リストを入力とし、
 \ref{sec:vgml_train_model}節で述べた学習済みモデルを使用して判定リストを生成する。
 VGMLが生成する判定リストは、単語リストの単語に対するUNNECESSAEY、NONCLASS、CLASSのいずれに属するかの判定結果と、
 単語が各項目に属する確率を単語リストに追加したものである。
-VGMLが生成する判定リストの例を、図\ref{fig:vgml_judge_list}に示す。
+図\ref{fig:vgml_teach}に示す教師データを基に生成した学習済みモデルと、図\ref{fig:vgml_word_list}に示す単語リストを入力として、VGMLの機械学習部が生成する判定リストの一部を図\ref{fig:vgml_judge_list}に示す。
 各項目に対する結果の確率は、入力である単語リストの各パラメータを、学習済みモデルを用いて出力した値である。
 
 \begin{figure}[t]
     \begin{center}
         \includegraphics[width=1.0\columnwidth]{image/vgml_judge_list.png}
-        \caption{VGMLが生成する判定リストの例}
+        \caption{VGMLが生成する判定リストの一部}
         \label{fig:vgml_judge_list}
     \end{center}
 \end{figure}
@@ -363,7 +367,7 @@ VGMLは、既存手法のVDM++仕様書に必要である単語、必要でな�
 クラスの候補である単語の3つの分類を行うために、VDM++仕様書生成部にクラス分類処理を追加する。
 VGMLのVDM++仕様書生成部を、図\ref{fig:vgml_generator}に示す。
 クラス分類処理は、判定リストを入力として、CLASSである単語を格納したCLASSリストと、NONCLASSである単語を格納したNONCLASSリストを生成する。
-CLASSリストとNONCLASSリストの例を、図\ref{fig:class_nonclass_list}に示す。
+図\ref{fig:vgml_judge_list}に示す判定リストを入力として、クラス分類処理が生成するCLASSリストとNONCLASSリストを、図\ref{fig:class_nonclass_list}に示す。
 
 \begin{figure}[t]
     \begin{center}
@@ -376,7 +380,7 @@ CLASSリストとNONCLASSリストの例を、図\ref{fig:class_nonclass_list}�
 \begin{figure}[t]
     \begin{center}
         \includegraphics[width=300]{image/class_nonclass_list.png}
-        \caption{CLASSリストとNONCLASSリストの例}
+        \caption{クラス分類処理が生成するCLASSリストとNONCLASSリスト}
         \label{fig:class_nonclass_list}
     \end{center}
 \end{figure}
@@ -395,7 +399,7 @@ VGMLにおけるVDM++仕様書生成部のクラス分類処理の流れを、�
 \end{enumerate}
 
 \ref{sec:class_list}のファイルAとファイルBの1行は、(判定リストの単語)で構成する。
-このファイルAがCLASSリスト、ファイルBがNONCLASSリストである。
+このファイルAとファイルBが、図\ref{fig:meishi_doshi_list}に示すCLASSリストとNONCLASSリストである。
 
 \section{インスタンス変数定義を生成する処理の追加}
 \label{sec:instance_generate}
@@ -411,15 +415,15 @@ VGMLにおけるVDM++仕様書生成部のクラス分類処理の流れを、�
 
 \subsection{単語を名詞と動詞に分類する処理の追加}
 \label{sec:classifier_meishi}
-VGMLは、NONCLASSリスト内の単語を、名詞である単語と動詞化できる単語に分類することによって、単語が自然言語仕様書内で振る舞いを表すか否かの判定を行う。
+VGMLは、図\ref{fig:class_nonclass_list}に示すNONCLASSリスト内の単語を、名詞である単語と動詞化できる単語に分類することによって、単語が自然言語仕様書内で振る舞いを表すか否かの判定を行う。
 VGMLにおけるVDM++仕様書生成部の名詞・動詞分類処理は、NONCLASSリストを入力として、NONCLASSリスト内の単語を\ref{}節で述べたMecabを用いて形態素解析する。
 さらに、名詞を表す単語を格納した名詞リストと、動詞化できる単語を格納した動詞リストを生成する。
-名詞リストと動詞リストの例を、図\ref{fig:meishi_doshi_list}に示す。
+\ref{fig:class_nonclass_list}に示すNONCLASSリストを入力として、名詞・動詞分類処理が生成する名詞リストと動詞リストを、図\ref{fig:meishi_doshi_list}に示す。
 
 \begin{figure}[t]
     \begin{center}
-        \includegraphics[width=500]{image/meishi_doshi_list.png}
-        \caption{名詞リストと動詞リストの例}
+        \includegraphics[width=300]{image/meishi_doshi_list.png}
+        \caption{名詞・動詞分類処理が生成する名詞リストと動詞リスト}
         \label{fig:meishi_doshi_list}
     \end{center}
 \end{figure}
@@ -442,27 +446,27 @@ VGMLにおけるVDM++仕様書生成部の名詞・動詞分類処理の流れ�
             \label{get_nouns}
             \item \ref{get_nouns}で取得した品詞に対し、以下のいずれかの処理を行う。
                 \begin{itemize}
-                    \item 品詞がサ変名詞である場合、\ref{read_nonclass_word}で読み込んだ単語を、\ref{doshi_list}で用意した空のファイルAに追加する。
-                    \item 品詞がサ変名詞でない場合、\ref{read_nonclass_word}で読み込んだ単語を、\ref{doshi_list}で用意した空のファイルBに追加する。
+                    \item 品詞がサ変名詞でない場合、\ref{read_nonclass_word}で読み込んだ単語を、\ref{doshi_list}で用意した空のファイルAに追加する。
+                    \item 品詞がサ変名詞である場合、\ref{read_nonclass_word}で読み込んだ単語を、\ref{doshi_list}で用意した空のファイルBに追加する。
                 \end{itemize}
         \end{enumerate}
 \end{enumerate}
 
 \ref{doshi_list}のファイルAとファイルBの1行は、(判定リストの単語)で構成する。
-このファイルAが動詞リスト、ファイルBが名詞リストである。
+このファイルAとファイルBが、図\ref{fig:meishi_doshi_list}に示す名詞リストと動詞リストである。
 
 \subsection{インスタンス変数定義の候補である単語を抽出する処理の追加}
 \ref{sec:classifier_meishi}節で述べた名詞リスト内の単語から、インスタンス変数定義の候補である単語を抽出するために、
 VDM++仕様書生成部にインスタンス変数定義生成処理を追加する。
-インスタンス変数定義生成処理は、名詞リストと\ref{sec:classifier_class}節で述べたCLASSリストを入力として、名詞リストと、インスタンス変数定義リストを出力する。
+インスタンス変数定義生成処理は、名詞リストとCLASSリストを入力として、名詞リストと、インスタンス変数定義リストを出力する。
 インスタンス変数定義生成処理が出力する名詞リストは、入力として受け取った名詞リストの単語の内、
 インスタンス変数定義の候補である単語を除いた単語を格納したリストである。
-インスタンス変数定義生成処理が生成するインスタンス変数定義リストを、図\ref{fig:instance_list}に示す。
+図\ref{fig:meishi_doshi_list}に示す名詞リスト、図\ref{fig:class_nonclass_list}に示すCLASSリストを入力として、インスタンス変数定義生成処理が生成するインスタンス変数定義リストを、図\ref{fig:instance_list}に示す。
 
 \begin{figure}[t]
     \begin{center}
         \includegraphics[width=1.0\columnwidth]{image/instance_list.png}
-        \caption{インスタンス変数定義リストの例}
+        \caption{インスタンス変数定義生成処理が生成するインスタンス変数定義リスト}
         \label{fig:instance_list}
     \end{center}
 \end{figure}
@@ -503,37 +507,19 @@ VGMLにおけるVDM++仕様書生成部のインスタンス変数定義生成�
         \end{enumerate}
 \end{enumerate}
 
-\ref{instance_list}のファイルAの1行は、0列目にクラスの候補である単語、1列目以降に、0列目のクラスの候補である単語が持つインスタンス変数定義の候補である単語で構成する。
-このファイルが、インスタンス変数定義リストである。
+\ref{instance_list}のファイルAの1行は、1列目にクラスの候補である単語、2列目以降に、1列目のクラスの候補である単語が持つインスタンス変数定義の候補である単語で構成する。
+このファイルが、図\ref{fig:instance_list}に示すインスタンス変数定義リストである。
 
-\section{操作・関数定義を生成する処理の追加}
-\label{sec:operate_func}
-本節では、自然言語仕様書からVDM++仕様書における操作・関数定義を生成する手法について説明する。
-具体的には、既存手法に対して以下の処理の追加を行う。
+\section{操作定義を生成する処理の追加}
+\label{sec:operate_generate}
+本節では、自然言語仕様書からVDM++仕様書における操作定義を生成する手法について説明する。
 
-\begin{itemize}
-    \item VDM++仕様書生成部にクラスごとに振る舞いを生成する処理の追加
-    \item VDM++仕様書生成部に操作・関数定義の候補である単語を抽出する処理の追加
-\end{itemize}
+VGMLは、\ref{sec:classifier_meishi}節で述べた動詞リスト内の単語から、クラスごとに操作定義を表す単語を抽出するために、
+VDM++仕様書生成部に操作定義生成処理を追加する。
+操作定義生成処理は、動詞リスト、CLASSリスト、連結リストを入力として、操作定義リストを生成する。
+図\ref{fig:meishi_doshi_list}に示す動詞リスト、図\ref{fig:class_nonclass_list}に示すCLASSリスト、図\ref{fig:vgml_connect_list}に示す連結リストを入力として、操作定義生成処理が生成する操作定義リストを、図\ref{fig:operate_list}に示す。
 
-以降、2つの追加した処理について詳細を述べる。
-
-\subsection{クラスごとに振る舞いを生成する処理の追加}
-\label{sec:method_generator}
-VGMLは、\ref{sec:classifier_meishi}節で述べた動詞リスト内の単語から、クラスごとに振る舞いを表す単語を抽出するために、
-VDM++仕様書生成部に振る舞い生成処理を追加する。
-振る舞い生成処理は、動詞リストと\ref{sec:classifier_class}節で述べたCLASSリスト、連結リストを入力として、振る舞いリストを生成する。
-振る舞い生成処理が生成する振る舞いリストの例を、図\ref{fig:method_list}に示す。
-
-\begin{figure}[t]
-    \begin{center}
-        \includegraphics[width=1.0\columnwidth]{image/method_list.png}
-        \caption{振る舞いリストの例}
-        \label{fig:method_list}
-    \end{center}
-\end{figure}
-
-VGMLにおけるVDM++仕様書生成部の振る舞い生成処理の流れを、以下に示す。
+VGMLにおけるVDM++仕様書生成部の操作定義生成処理の流れを、以下に示す。
 
 \begin{enumerate}
     \item CLASSリスト、動詞リスト、連結リストを入力として読み込む。
@@ -579,58 +565,19 @@ VGMLにおけるVDM++仕様書生成部の振る舞い生成処理の流れを�
         \end{enumerate}
 \end{enumerate}
 
-\ref{method_list}のファイルの1行は、1列目にクラスの候補である単語、2列目以降に、1列目のクラスの候補である単語が持つ振る舞いの候補である単語で構成する。
-このファイルが、振る舞いリストである。
-
-\subsection{操作・関数定義の候補である単語を抽出する処理の追加}
-\label{sec:operate_generator}
-VGMLは、\ref{sec:classifier_meishi}節で述べた振る舞いリストから、操作定義の候補である単語と、関数定義の候補である単語を抽出するために、
-VDM++仕様書生成部に操作・関数定義生成処理を追加する。
-操作・関数定義生成処理は、振る舞いリストと\ref{sec:classifier_class}節で述べたCLASSリストを入力として、操作定義リストと関数定義リストを出力する。
-操作定義生成処理が生成する操作定義リストを図\ref{fig:operate_list}に、関数定義リストを図\ref{fig:func_list}にそれぞれ示す。
-操作定義リストは、振舞いリストの振舞いを表す単語の内、クラスの候補である単語の文字列を含む単語を持つリストであり、
-関数定義リストは、振舞いリストの振舞いを表す単語の内、クラスの候補である単語の文字列を含まない単語を持つリストである。
+\ref{fig:operate_list}のファイルの1行は、1列目にクラスの候補である単語、2列目以降に、1列目のクラスの候補である単語が持つ、操作定義の候補である単語で構成する。
+このファイルが、図\ref{fig:operate_list}に示す操作定義リストである。
 
 \begin{figure}[t]
     \begin{center}
         \includegraphics[width=1.0\columnwidth]{image/operate_list.png}
-        \caption{操作定義リストの例}
+        \caption{操作定義生成処理が生成する操作定義リスト}
         \label{fig:operate_list}
     \end{center}
 \end{figure}
 
-\begin{figure}[t]
-    \begin{center}
-        \includegraphics[width=1.0\columnwidth]{image/func_list.png}
-        \caption{関数定義リストの例}
-        \label{fig:func_list}
-    \end{center}
-\end{figure}
-
-VGMLにおけるVDM++仕様書生成部の操作定義生成処理の流れを、以下に示す。
-
-\begin{enumerate}
-    \item 2つの空のファイルAとファイルBを用意する。
-    \label{operate_list}
-    \item 振舞いリストとCLASSリストを読み込む。
-    \item 振舞いリストの行の数だけ、以下の処理を繰り返す。
-        \begin{enumerate}
-            \item 1列目のクラスの候補である単語を、\ref{operate_list}で用意したファイルAに追加する。
-            \label{write_operate}
-            \item 1列目のクラスの候補である単語を、\ref{operate_list}で用意したファイルBに追加する。
-            \label{write_func}
-            \item 2列目以降の単語の内、CLASSリスト内のいずれかの単語の文字列を含む単語を、\ref{write_operate}のファイル内の同じ行の末尾に追加する。
-            \item 2列目以降の単語の内、CLASSリスト内のいずれの単語の文字列も含まない単語を、\ref{write_func}のファイル内の同じ行の末尾に追加する。
-        \end{enumerate}
-\end{enumerate}
-
-\ref{operate_list}のファイルAの1行は、1列目にクラスの候補である単語、2列目以降に、1列目のクラスの候補である単語が持つ操作定義の候補である単語で構成する。
-このファイルが、操作定義リストである。
-\ref{operate_list}のファイルBの1行は、1列目にクラスの候補である単語、2列目以降に、1列目のクラスの候補である単語が持つ関数定義の候補である単語で構成する。
-このファイルが、関数定義リストである。
-
-\section{各定義ブロックの候補である単語をVDM++仕様書に書き込む処理の追加}
-本節では、既存手法が生成する型定義と定数定義に加え、\ref{sec:generate_class}-\ref{sec:operate_func}節で述べた各定義ブロックを記述したVDM++仕様書を生成する。
+\section{各定義ブロックの候補である単語をVDM++仕様書に書き込む処理の改良}
+本節では、既存手法が生成する型定義と定数定義に加え、\ref{sec:generate_class}-\ref{sec:operate_generate}節で述べた各定義ブロックを記述したVDM++仕様書を生成する。
 
 具体的には、既存手法に対して以下の処理の改良を行う。
 
@@ -643,30 +590,27 @@ VGMLにおけるVDM++仕様書生成部の操作定義生成処理の流れを�
 
 \subsection{各定義ブロックの候補である単語に識別子を挿入する処理の改良}
 既存手法は、VDM++仕様書生成部の識別子挿入処理において、自然言語仕様書から抽出した単語に対し、型定義と定数定義を表す「types」と「values」のいずれかの識別子を追加する。
-さらに、図\ref{}に示す識別子リストを生成する。
+さらに、図\ref{fig:exis_katateisu_id_list}に示す型・定数定義識別子リストを生成する。
 
-VGMLの識別子挿入処理は、\ref{sec:instance_generate}-\ref{sec:operate_func}節で述べたインスタンス変数定義リスト、操作定義リスト、関数定義リスト、型・定数定義リストを入力として、
-既存手法が追加する「types」と「values」の識別子に加え、クラス、インスタンス変数定義、操作定義、関数定義を表す「class」、「instance variables」、「operations」、「functions」の
+VGMLの識別子挿入処理は、型・定数定義リスト、インスタンス変数定義リスト、操作定義リストを入力として、
+既存手法が追加する「types」と「values」の識別子に加え、クラス、インスタンス変数定義、操作定義を表す「class」、「instance variables」、「operations」の
 識別子を単語に追加できるように、識別子挿入処理を改良する。
-さらに、型・定数定義識別子リストと、クラスの候補の単語の数だけクラス毎識別子リストを生成する。
-ここで、型・定数定義識別子リストは、図\ref{}に示す既存手法が生成する識別子リストと同様のものである。
-VGMLが生成するクラス毎識別子リストの例を、図\ref{fig:vgml_sikibetushi_list}に示す。
+さらに、型・定数定義識別子リストと、CLASSリストの要素数だけクラス毎識別子リストを生成する。
+図\ref{fig:exis_katateisu_list}に示す型・定数定義リスト、図\ref{fig:instance_list}に示すインスタンス変数定義リスト、図\ref{fig:operate_list}に示す操作定義リストを入力として、VGMLの識別子挿入処理が生成するクラス毎識別子リストの例を、図\ref{fig:vgml_sikibetushi_list}に示す。
 
 \begin{figure}[t]
     \begin{center}
         \includegraphics[width=1.0\columnwidth]{image/vgml_sikibetushi_list.png}
-        \caption{クラス毎識別子リストの例}
+        \caption{VGMLの識別子挿入処理が生成するクラス毎識別子リスト}
         \label{fig:vgml_sikibetushi_list}
     \end{center}
 \end{figure}
 
 VGMLのVDM++仕様書生成部における識別子挿入処理の流れを、以下に示す。
-なお、VGMLの識別子挿入処理が生成する型・定数定義識別子リストとその生成手法は、
-既存手法が生成する識別子リストとその生成手法と同様のものである。
-そのため、型・定数定義識別子リストを生成する処理の詳細については、説明を省略する。
+なお、型・定数定義識別子リストを生成する処理の詳細については、説明を省略する。
 
 \begin{enumerate}
-    \item 型・定数定義リスト、インスタンス変数定義リスト、操作定義リスト、関数定義リストを入力として読み込む。
+    \item 型・定数定義リスト、インスタンス変数定義リスト、操作定義リストを入力として読み込む。
     \item 型・定数定義リストを基に、型・定数定義識別子リストを生成する。
     \item インスタンス変数定義リストの行の数だけ、以下の処理を繰り返す。
         \begin{enumerate}
@@ -695,32 +639,20 @@ VGMLのVDM++仕様書生成部における識別子挿入処理の流れを、�
                     \item 文字列「operations」と\ref{operate_word}の単語を、\ref{class_instance_operate_list}のファイルに追加する。
                 \end{enumerate}
         \end{enumerate}
-    \item 関数定義リストの行の数だけ、以下の処理を繰り返す。
-        \begin{enumerate}
-            \item 関数定義リストの1列目の単語を読み込む。
-            \label{id_func_word}
-            \item \ref{class_instance_list}のファイルの内、ファイルの1行1列目の単語と、\ref{id_func_word}の単語が一致するファイルを読み込む。
-            \label{class_instance_operate_func_list}
-            \item 関数定義リストの、2列目から末尾の要素まで以下の処理を繰り返す。
-                \begin{enumerate}
-                    \item 当該列の単語を読み込む。
-                    \label{func_word}
-                    \item 文字列「functions」と\ref{func_word}の単語を、\ref{class_instance_operate_func_list}のファイルに追加する。
-                \end{enumerate}
-        \end{enumerate}
 \end{enumerate}
 
-\ref{class_instance_list}のファイルは、クラスの候補の単語の数だけ生成し、1つのファイルの1行目は、(class, クラスの候補である単語名)、
-2行目以降は、(instance variables,インスタンス変数定義の候補である単語名)、 (operations,操作定義の候補である単語名)、(functions,関数定義の候補である単語名)のいずれかで構成する。
-このファイルが、クラス毎識別子リストである。
+\ref{class_instance_list}のファイルは、CLASSリストの要素数だけ生成し、1つのファイルの1行目は、(class, クラスの候補である単語名)、
+2行目以降は、(instance variables,インスタンス変数定義の候補である単語名)、 (operations,操作定義の候補である単語名)のいずれかで構成する。
+このファイルが、図\ref{fig:vgml_sikibetushi_list}に示すクラス毎識別子リストである。
 
 \subsection{VDM++仕様書を生成する処理の改良}
 既存手法は、VDM++仕様書生成部のVDM++仕様書生成部において、型・定数定義識別子リスト
-を入力として、図\ref{}に示す型定義と定数定義が記述したVDM++仕様書を生成する。
+を入力として、図\ref{fig:exis_vdm}に示す型定義と定数定義が記述したVDM++仕様書を生成する。
 
-VGMLのVDM++仕様書生成処理は、型・定数定義識別子リストとクラス毎識別子リストを入力として、既存手法の型定義と定数定義に加え、クラス、インスタンス変数定義、操作定義、関数定義を記述した
+VGMLのVDM++仕様書生成処理は、型・定数定義識別子リストとクラス毎識別子リストを入力として、既存手法の型定義と定数定義に加え、クラス、インスタンス変数定義、操作定義を記述した
 VDM++仕様書を生成する。
-VGMLが生成するVDM++仕様書の例を、図\ref{fig:4_vdm}に示す。
+図\ref{fig:exis_katateisu_id_list}に示す型・定数定義識別子リストと、図\ref{fig:vgml_sikibetushi_list}に示すクラス毎識別子リストを入力として、
+VGMLのVDM++仕様書生成処理が生成するVDM++仕様書の例を、図\ref{fig:4_vdm}に示す。
 VGMLが生成するVDM++仕様書は、CLASSリストの要素数+1のファイルで構成する。
 
 \begin{figure}[t]
@@ -739,13 +671,14 @@ VGMLのVDM++仕様書生成部におけるVDM++仕様書生成処理の流れを
 
 \begin{enumerate}
     \item クラス毎識別子リストと型・定数定義識別子リストを入力として読み込む。
-    \item 型・定数定義識別子リストを基に、図\ref{}と同様のファイルを生成する。
+    \item 型・定数定義識別子リストを基に、図\ref{fig:exis_vdm}と同様のファイルを生成する。
+    \label{katateisu_vdm}
     \item 空のファイルを用意する。
     \label{vdm_file}
     \item クラス毎識別子リストの1行目を読み込む。
     \label{read_class}
     \item \ref{vdm_file}で用意したファイルに、「class \textless \ref{read_class}の行の2列目の要素 \textgreater」を追加する。
-    \item \ref{vdm_file}で用意したファイルに、表\ref{table:vdm_syntax}のVDM++の各ブロック「types」「instance variables」、「operations」、「functions」を追加する。
+    \item \ref{vdm_file}で用意したファイルに、表\ref{table:vdm_syntax}のVDM++の各ブロック「types」「instance variables」、「operations」を追加する。
     \label{add_sikibetushi}
     \item クラス毎識別子リスト内の2行目以降の行に対し、以下の処理を繰り返す。
         \begin{enumerate}
@@ -759,25 +692,22 @@ VGMLのVDM++仕様書生成部におけるVDM++仕様書生成処理の流れを
                     \item \ref{add_sikibetushi}で追加した「instance variables」の次の行に、表\ref{table:vdm_syntax}の構文に従って、\ref{shikibetu_elem}の行の2列目の要素をVDM++仕様書の構文の「名前」に、\ref{read_kata}で生成した単語をVDM++仕様書の構文の「型」に挿入する。
                 \end{enumerate}
             \item \ref{shikibetu_elem}の行の1列目の識別子が「operations」である場合、\ref{add_sikibetushi}で追加した「operations」の次の行に、表{}の構文に従って、\ref{shikibetu_elem}の行の2列目の要素をVDM++仕様書の構文の「名前」に挿入する。
-            \item \ref{shikibetu_elem}の行の1列目の識別子が「functions」である場合、\ref{add_sikibetushi}で追加した「functions」の次の行に、表{}の構文に従って、\ref{shikibetu_elem}の行の2列目の要素をVDM++仕様書の構文の「名前」に挿入する。
         \end{enumerate}
     \item \ref{vdm_file}で用意したファイルの最下行に、「end \textless \ref{read_class}の行の2列目の要素 \textgreater」を追加する。
 \end{enumerate}
 
-例として、図\ref{fig:vgml_sikibetushi_list}のファイルの内、「企業担当者」クラスを記述したファイルの、1行目、2行目、4行目、7行目について説明する。
+\ref{katateisu_vdm}と\ref{vdm_file}のファイルが、図\ref{fig:4_vdm}に示すVDM++仕様書である。
+
+例として、図\ref{fig:vgml_sikibetushi_list}のファイルの内、「企業担当者」クラスを記述したファイルの、1行目、2行目、4行目について説明する。
 
 1行目について説明する。2列目の単語を読み取る。「class」の構文「class 名前」が、2列目の「企業担当者」を「名前」に関連付ける。
 そして、空のファイルを生成し、「class 企業担当者」を挿入する。
 
 次に、2行目について説明する。1列目の識別子を読み取り、「instance variables」の次の行に記述する。
-「instance variables」の構文「public 名前 : 型;」が、2列目の「企業担当者id」を「名前」に関連付ける。
-さらに、「企業担当者id」から、1行2列目の「企業担当者」を除いた「id」を生成し、「id」を「型」に関連付ける。
-そして、VDM ++仕様書のブロック「instance variables」の次の行に「public  = 企業担当者id : id;」を挿入する。
+「instance variables」の構文「public 名前 : 型;」が、2列目の「企業担当者名」を「名前」に関連付ける。
+さらに、「企業担当者名」から、1行2列目の「企業担当者」を除いた「名」を生成し、「名」を「型」に関連付ける。
+そして、VDM ++仕様書のブロック「instance variables」の次の行に「public  = 企業担当者名 : 名;」を挿入する。
 
 次に、4行目について説明する。1列目の識別子を読み取り、「operations」の次の行に記述する。
-「operations」の構文「名前 : ()==\textgreater real \textless 改行 \textgreater 名前()== \textless 改行 \textgreater return 0;」が、2列目の「インターンシップエントリ学生閲覧」を「名前」に関連付ける。
-そして、VDM ++仕様書のブロック「operations」の次の行に「インターンシップエントリ学生閲覧 : ()==\textgreater real \textless 改行 \textgreater インターンシップエントリ学生閲覧()== \textless 改行 \textgreater return 0;」を挿入する。
-
-次に、7行目について説明する。1列目の識別子を読み取り、「functions」の次の行に記述する。
-「functionss」の構文「名前 : ()-\textgreater real \textless 改行 \textgreater 名前()== 0;」が、2列目の「セキュリティ確保」を「名前」に関連付ける。
-そして、VDM ++仕様書のブロック「functions」の次の行に「セキュリティ確保 : ()-\textgreater real \textless 改行 \textgreater セキュリティ確保()== 0;」を挿入する。
+「operations」の構文「名前 : ()==\textgreater real \textless 改行 \textgreater 名前()== \textless 改行 \textgreater return 0;」が、2列目の「学生情報一覧確認」を「名前」に関連付ける。
+そして、VDM ++仕様書のブロック「operations」の次の行に「学生情報一覧確認 : ()==\textgreater real \textless 改行 \textgreater 学生情報一覧確認()== \textless 改行 \textgreater return 0;」を挿入する。
