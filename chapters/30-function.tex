@@ -30,18 +30,10 @@
 \begin{enumerate}
     \item テキスト抽出処理において、自然言語仕様書を入力とし、自然言語仕様書内のテキストを抽出する。さらに、抽出したテキストを格納したテキストリストを生成する。図\ref{fig:exis_spec_example}に示す仕様書を入力として、既存手法のテキスト抽出処理が生成するテキストリストを、図\ref{fig:exis_text_list}に示す。
     \label{text_list}
-    \item 分かち書き処理において、\ref{text_list}で生成したテキストリストを入力とし、テキストリスト内のテキストを文ごとに分ける。さらに、文を\ref{}節で述べたMecabを用いて分かち書きし、分かち書きした文を格納した分かち書きリストを生成する。図\ref{fig:text_list}に示すテキストリストを入力として、既存手法の分かち書き処理が生成する分かち書きリストを、図\ref{fig:exis_wakati_list}に示す。
+    \item 分かち書き処理において、\ref{text_list}で生成したテキストリストを入力とし、テキストリスト内のテキストを文ごとに分ける。さらに、文を\ref{sec:mecab}節で述べたMecabを用いて分かち書きし、分かち書きした文を格納した分かち書きリストを生成する。図\ref{fig:exis_text_list}に示すテキストリストを入力として、既存手法の分かち書き処理が生成する分かち書きリストを、図\ref{fig:exis_wakati_list}に示す。
     \label{wakati_list}
-    \item 単語連結処理において、\ref{wakati_list}で生成した分かち書きリストを入力とし、分かち書きリスト内の助詞、助動詞、接続詞、副詞の品詞である単語を除く。さらに、分かち書きリスト内の文の連続する2つ以上の名詞と動詞を連結する。最後に、名詞と動詞を連結した文を格納した連結リストを生成する。図\ref{fig:wakati_list}に示す分かち書きリストを入力として、既存手法の単語連結処理が生成する連結リストを、図\ref{fig:exis_connect_list}に示す。
+    \item 単語連結処理において、\ref{wakati_list}で生成した分かち書きリストを入力とし、分かち書きリスト内の助詞、助動詞、接続詞、副詞の品詞である単語を除く。さらに、分かち書きリスト内の文の連続する2つ以上の名詞と動詞を連結する。最後に、名詞と動詞を連結した文を格納した連結リストを生成する。図\ref{fig:exis_wakati_list}に示す分かち書きリストを入力として、既存手法の単語連結処理が生成する連結リストを、図\ref{fig:exis_connect_list}に示す。
 \end{enumerate}
-
-\begin{figure}[tp]
-    \begin{center}
-        \includegraphics[width=1.0\columnwidth]{image/exis_mor_structure.png}
-        \caption{既存手法における形態素解析部の構造}
-        \label{fig:exis_mor_structure}
-    \end{center}
-\end{figure}
 
 \begin{figure}[tp]
     \begin{center}
@@ -53,9 +45,17 @@
 
 \begin{figure}[tp]
     \begin{center}
+        \includegraphics[width=1.0\columnwidth]{image/exis_mor_structure.png}
+        \caption{既存手法における形態素解析部の構造}
+        \label{fig:exis_mor_structure}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
         \includegraphics[width=1.0\columnwidth]{image/exis_text_list.png}
         \caption{既存手法のテキスト抽出処理が生成するテキストリスト}
-        \label{fig:exis_test_list}
+        \label{fig:exis_text_list}
     \end{center}
 \end{figure}
 
@@ -70,7 +70,7 @@
 \begin{figure}[tp]
     \begin{center}
         \includegraphics[width=1.0\columnwidth]{image/exis_connect_list.png}
-        \caption{既存手法の形態素解析部が生成する連結リスト}
+        \caption{既存手法の単語連結処理が生成する連結リスト}
         \label{fig:exis_connect_list}
     \end{center}
 \end{figure}
@@ -82,18 +82,31 @@
 既存手法における変換部の処理の流れを、以下に示す。
 
 \begin{enumerate}
-    \item TF-IDF値生成処理において、図\ref{fig:exis_connect_list}に示す連結リストを入力とし、連結リスト内の単語に対し\ref{}で述べたTF-IDF値を計算する。さらに、連結リスト内の単語を全て格納した単語配列と、単語とTF-IDF値のセットを格納した列数2の一時ファイルを生成する。
+    \item TF-IDF値生成処理において、図\ref{fig:exis_connect_list}に示す連結リストを入力とし、連結リスト内の単語に対し\ref{sec:tfidf}節で述べたTF-IDF値を計算する。さらに、連結リスト内の単語を全て格納した単語配列と、単語とTF-IDF値のセットを格納した列数2の一時ファイルを生成する。
     \label{tf_list}
     \item 出現回数生成処理において、\ref{tf_list}で生成した単語配列と列数2の一時ファイルを入力とし、単語配列の各単語の出現回数を計算する。さらに、列数2の一時ファイルに各単語の出現回数を追加することによって列数3の一時ファイルを生成する。
     \label{appear_list}
-    \item 優先値生成処理において、\ref{appear_list}で生成した列数3の一時ファイルを入力とし、各単語の文字数とその文字の種類によって重みづけをした値(優先値)を計算する。さらに、列数3の一時ファイルに各単語の優先値を追加することによって列数4の一時ファイルを生成する。文字の種類によって重みづけをした値を表\ref{}に、優先値の計算式を式\ref{}に示す。
+    \item 優先値生成処理において、\ref{appear_list}で生成した列数3の一時ファイルを入力とし、各単語の文字数とその文字の種類によって重みづけをした値(優先値)を計算する。さらに、列数3の一時ファイルに各単語の優先値を追加することによって列数4の一時ファイルを生成する。文字の種類によって重みづけをした値を表\ref{table:yusenti}に、優先値は、$「単語の総文字数 + 文字の種類ごとの文字数 * 重み」$の計算式で計算する。
     \label{prior_list}
     \item 連結回数生成処理において、図\ref{fig:exis_connect_list}に示す連結リストと\ref{prior_list}で生成した列数4の一時ファイルを入力とし、各単語が他の単語に連結している回数を計算する。さらに、列数4の一時ファイルに各単語の連結回数を追加することによって単語リストを生成する。
     \label{exis_word_list}
     \item 数値抽出処理において、図\ref{fig:exis_connect_list}に示す連結リストと\ref{exis_word_list}で生成した単語リストを入力とし、各単語が同じ文中にその単語の数を表す数値があるかを探索する。さらに、単語、数値、TF-IDF値のセットを格納した数値リストを生成する。
 \end{enumerate}
 
-図\ref{fig:exis_connect_list}に示す連結リストを入力として、既存手法の変換部が生成する単語リストの一部を図\ref{fig:exis_connect_list}に、数値リストを図\ref{fig:exis_suti_list}示す。
+\begin{table}[t]
+    \begin{center}      
+        \caption{文字の種類によって重みづけをした値}\label{table:yusenti}
+        \begin{tabular}{c|c|c}
+        文字の種類  & 重み \\ \hline \hline
+        ひらがな & 0.1 \\ \hline
+        カタカナ	 & 0.2\\ \hline
+        英数字  & 0.2\\ \hline
+        漢字 & 1.0\\ \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+図\ref{fig:exis_connect_list}に示す連結リストを入力として、既存手法の変換部が生成する単語リストの一部を図\ref{fig:exis_word_list}に、数値リストを図\ref{fig:exis_suti_list}示す。
 
 \begin{figure}[tp]
     \begin{center}
@@ -149,7 +162,7 @@
 既存手法における機械学習部の処理の流れを、以下に示す。
 
 \begin{enumerate}
-    \item 学習済みモデル生成処理において、図\ref{fig:exis_teach}に示す教師データを入力とし、\ref{}節で述べた二項ロジスティック回帰分析を用いて学習済みモデルを生成する。
+    \item 学習済みモデル生成処理において、図\ref{fig:exis_teach}に示す教師データを入力とし、\ref{sec:logistic}節で述べた二項ロジスティック回帰分析を用いて学習済みモデルを生成する。
     \label{exis_teach_model}
     \item 判定リスト生成処理において、\ref{exis_teach_model}で生成した学習済みモデルと図\ref{exis_word_list}に示す単語リストを入力とし、単語リスト内の単語がVDM++仕様書に必要である確率を計算する。さらに、確率が0.5未満である単語に0の判定結果を、確率が0.5以上の単語に1の判定結果を与える。最後に、単語リストに単語の判定結果と確率を追加することによって判定リストを生成する。
 \end{enumerate}
@@ -186,7 +199,7 @@
 既存手法におけるVDM++仕様書生成部の処理の流れを、以下に示す。
 
 \begin{enumerate}
-    \item 型・定数定義生成処理において、図\ref{fig:exis_suti_list}に示す数値リストと、図\ref{fig:exis_judge_list}に示す判定リストを入力とし、識別子を挿入するための一時的なID「INDEX」と単語のセット、または「INDEX」、単語、数値のセットを格納した型・定数定義リストを生成する。図\ref{fig:exis_suti_list}と図\ref{fig:exis_judge_list}を入力として、既存手法の型・定数定義生成処理が生成する型・定数定義リストを、図\ref{fig:exis_katateisu_list}に示す。
+    \item 型・定数定義生成処理において、図\ref{fig:exis_suti_list}に示す数値リストと、図\ref{fig:exis_judge_list}に示す判定リストを入力とし、識別子を挿入するための一時的なID「INDEX」と単語のセット、または「INDEX」、単語、数値のセットを格納した型・定数定義リストを生成する。図\ref{fig:exis_suti_list}に示す数値リストと図\ref{fig:exis_judge_list}に示すい判定リストを入力として、既存手法の型・定数定義生成処理が生成する型・定数定義リストを、図\ref{fig:exis_katateisu_list}に示す。
     \label{katateisu}
     \item 識別子挿入処理において、\ref{katateisu}で生成した型・定数定義リスト内の一時的なID「INDEX」に、「types」または「values」を識別子として挿入する。さらに、識別子と単語のセット、または識別子、単語、数値のセットを格納した型・定数定義識別子リストを生成する。図\ref{fig:exis_katateisu_list}に示す型・定数定義リストを入力として、既存手法の識別子挿入処理が生成する型・定数定義識別子リストを、図\ref{fig:exis_katateisu_id_list}に示す。
     \label{sikibetu}
@@ -227,7 +240,7 @@
 \end{figure}
 
 \section{既存手法の問題点}
-\label{sec:problemm}
+\label{sec:problem}
 既存手法は、上記の4つの処理部によって、自然言語仕様書内の単語の内、VDM++仕様書に必要な単語を抽出し、VDM++仕様書を自動生成することができる。
 しかし、既存手法は、自然言語仕様書から抽出した単語を、VDM++仕様書に必要である単語と必要でない単語に分類し、型定義と定数定義に対応したVDM++仕様書を出力できるが、
 クラスやその他のブロック定義に対応したVDM++仕様書を出力することができない。そのため、既存手法は、対応しているVDM++の構文が少なく、有用性が低い。
@@ -236,6 +249,6 @@
 
 \begin{itemize}
     \item クラス
-    \item インスタンス変数
+    \item インスタンス変数定義
     \item 操作定義
 \end{itemize}
