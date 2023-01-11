@@ -21,6 +21,14 @@
 \usepackage{multirow}
 \usepackage{ascmac}
 
+\renewcommand{\theenumi}{\arabic{enumi}.}
+\renewcommand{\theenumii}{\alph{enumii}.}
+\renewcommand{\theenumiii}{\roman{enumiii}.}
+
+\renewcommand{\labelenumi}{\arabic{enumi}.}
+\renewcommand{\labelenumii}{\alph{enumii}.}
+\renewcommand{\labelenumiii}{\roman{enumiii}.}
+
 
 % \usepackage{latexsym}
 % \usepackage{bmpsize}
@@ -73,10 +81,181 @@
 %%
 %参考文献
 %
-\begin{thebibliography}{0}
+\begin{thebibliography}{10}
+	    
+    \bibitem{shigyo1}Yasuhiro Shigyo, Tetsuro Katayama, Yoshihiro Kita, Hisaaki Yamaba, Kentaro Aburada, Naonobu Okazaki. 
+    Proposal of an Algorithm to Generate VDM++ by Using Word Lists Extracted from the Natural Language Speciﬁcation. 
+    The 2020 International Conference on Arificial Life and Robotics(ICAROB 2020), 
+    pp. 763-766, 2020.
+    
+    \bibitem{shigyo2}Tetsuro Katayama, Yasuhiro Shigyo, Yoshihiro Kita, Hisaaki Yamaba, Kentaro Aburada, Naonobu Okazaki. 
+    Proposal of an Algorithm to Generate VDM++ Speciﬁcation Based on its Grammar by Using Word Lists Extracted from the Natural Language Speciﬁcation. 
+    Journal of Robotics, Networking and Artiﬁcial Life, vol7(3), pp.165-169, 2020.
+
+    \bibitem{shigyo3} Yasuhiro Shigyo, Tetsuro Katayama. 
+    Proposal of an Approach to Generate VDM++ Speciﬁcations from Natural Language Speciﬁcation by Machine Learning. 
+    2020 IEEE 9th Global Conference on Consumer Electronics(GCCE), 
+    pp. 292-296, 2020.
+
+    \bibitem{shigyo4}
+    執行泰弘, 片山徹郎. 
+    機械学習を用いた自然言語仕様書から生成した分類リストを用いたVDM++仕様書生成アプローチの提案. 
+    宮崎大学工学部紀要 第49号, 
+    pp. 245-250, 2021.
+
+    \bibitem{Tools}
+    FMVDM, “VDMTools”, http:\slash \slash fmvdm.org\slash vdmtools. Accessed: 2022-01-12.
+
+    \bibitem{ET_robo}
+    ETロボコン2020委員会,  “ETロボコン2020シュミレーター競技規約”, https:\slash \slash docs.etrobo.jp\slash rules\slash 2020\slash ETRC2020\_rules(sim)\_1.0.1.pdf. Acceseed: 2022-01-12.
+
+    \bibitem{research1}
+    大森洋一, 荒木啓二郎. 
+    自然言語による仕様記述の形式モデルへの変換を利用した品質向上に向けて. 
+    情報処理学会論文誌プログラミング(PRO), 
+    vol.3, no.5, pp. 18-28, 2010.
+
+    \bibitem{research2}
+    大森洋一, 荒木啓二郎. 
+    ツールを使用した形式仕様の事例研究. 
+    情報処理学会研究報告ソフトウェア工学(SE), 
+    vol.2012-SE-175, no.8, pp. 1-8, 2012.
+
+    \bibitem{research3}
+    Lee Beum-Seuk, Barrett R. Bryant. 
+    Automated conversion from requirements documentation to an ob jectoriented formal speciﬁcation language. 
+    2002 ACM Symposium on Applied Computing, pp. 932-936, 2002.
+
 	\bibitem{example}example\\
 	\url{http://example.com}\\アクセス日:1970/01/01.
 \end{thebibliography}
+
+\appendix  %%%%%% これ以降 付録 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{インターンシップ評定書・オンライン提出システム}\label{ET_Specifications}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/internship_1.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/internship_2.eps}
+
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/internship_3.eps}
+    \end{center}
+\end{figure}
+
+\chapter{ETロボコン2020競技規約}    \label{ET_Specification}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_1.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_2.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_3.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_4.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_5.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_6.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_7.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_8.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_9.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_10.eps}
+    \end{center}
+\end{figure}
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_11.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_12.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_13.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_14.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_15.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_16.eps}
+    \end{center}
+\end{figure}
+
+\begin{figure}[tp]
+    \begin{center}
+    \includegraphics[width=\hsize]{specification/ET_17.eps}
+    \end{center}
+\end{figure}
+
 
 % \newpage
 % \listoftodos
