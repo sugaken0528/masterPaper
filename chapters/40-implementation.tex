@@ -463,7 +463,7 @@ VGMLにおけるVDM++仕様書生成部の名詞・動詞分類処理の流れ�
 \end{enumerate}
 
 \ref{doshi_list}のファイルAとファイルBの1行は、(判定リストの単語)で構成する。
-このファイルAとファイルBが、図\ref{fig:meishi_doshi_list}に示す名詞リストと動詞リストである。
+このファイルAとファイルBがそれぞれ、図\ref{fig:meishi_doshi_list}に示す名詞リストと動詞リストである。
 
 \subsection{インスタンス変数定義の候補である単語を抽出する処理の追加}
 \ref{sec:classifier_meishi}節で述べた名詞リスト内の単語から、インスタンス変数定義の候補である単語を抽出するために、
@@ -587,7 +587,7 @@ VGMLにおけるVDM++仕様書生成部の操作定義生成処理の流れを�
 \end{figure}
 
 \section{「クラス」「インスタンス変数定義」「操作定義」の候補である単語をVDM++仕様書に書き込む処理の追加}
-本節では、既存ツールが生成する型定義と定数定義に加え、\ref{sec:generate_class}-\ref{sec:operate_generate}節で述べた各定義ブロックを記述したVDM++仕様書を生成する。
+本節では、既存ツールが生成する型定義と定数定義に加え、\ref{sec:generate_class}節-\ref{sec:operate_generate}節で述べた各定義ブロックを記述したVDM++仕様書を生成する。
 
 具体的には、既存ツールに対して以下の処理の改良を行う。
 
@@ -660,8 +660,8 @@ VGMLのVDM++仕様書生成部における識別子挿入処理の流れを、�
 このファイルが、図\ref{fig:vgml_sikibetushi_list}に示すクラス毎識別子リストである。
 
 \subsection{VDM++仕様書を生成する処理の改良}
-既存ツールは、VDM++仕様書生成部のVDM++仕様書生成部において、型・定数定義識別子リスト
-を入力として、図\ref{fig:exis_vdm}に示す型定義と定数定義が記述したVDM++仕様書を生成する。
+既存ツールは、VDM++仕様書生成部のVDM++仕様書生成処理において、型・定数定義識別子リスト
+を入力として、図\ref{fig:exis_vdm}に示す型定義と定数定義を記述したVDM++仕様書を生成する。
 
 VGMLのVDM++仕様書生成処理は、型・定数定義識別子リストとクラス毎識別子リストを入力として、既存ツールの型定義と定数定義に加え、クラス、インスタンス変数定義、操作定義を記述した
 VDM++仕様書を生成する。
@@ -669,7 +669,7 @@ VDM++仕様書を生成する。
 VGMLのVDM++仕様書生成処理が生成するVDM++仕様書を、図\ref{fig:4_vdm}に示す。
 VGMLが生成するVDM++仕様書は、CLASSリストの要素数+1のファイル数で構成する。
 
-\begin{figure}[t]
+\begin{figure}[p]
     \begin{center}
         \includegraphics[width=1.0\columnwidth]{image/4_vdm.png}
         \caption{VGMLが生成するVDM++仕様書}
@@ -681,7 +681,7 @@ VGMLのVDM++仕様書生成部におけるVDM++仕様書生成処理の流れを
 なお、VGMLのVDM++仕様書生成処理が、型・定数定義識別子リストから生成するVDM++仕様書のファイルとその生成手法は、
 既存ツールが生成するVDM++仕様書とその生成手法と同様のものである。
 そのため、型・定数定義識別子リストを基にファイルを生成する処理の詳細については、説明を省略する。
-また、以下に示す処理はクラス毎識別リストの数だけ行う。
+また、以下に示す処理はクラス毎識別子リストの数だけ行う。
 
 \begin{enumerate}
     \item クラス毎識別子リストと型・定数定義識別子リストを入力として読み込む。
@@ -711,7 +711,7 @@ VGMLのVDM++仕様書生成部におけるVDM++仕様書生成処理の流れを
     \item \ref{vdm_file}で用意したファイルの最下行に、「end \textless \ref{read_class}で読み込んだ行の2列目の要素 \textgreater」を追加する。
 \end{enumerate}
 
-\ref{katateisu_vdm}と\ref{vdm_file}のファイルが、図\ref{fig:4_vdm}に示すVDM++仕様書である。
+この\ref{katateisu_vdm}と\ref{vdm_file}のファイルが、図\ref{fig:4_vdm}に示すVDM++仕様書である。
 
 例として、図\ref{fig:vgml_sikibetushi_list}のファイルの内、「企業担当者」クラスを記述したファイルの、1行目、2行目、4行目について説明する。
 

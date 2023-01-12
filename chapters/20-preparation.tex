@@ -1,6 +1,36 @@
-\chapter{研究の準備}\label{cha:Preparation}
+\chapter{研究の準備}
+\label{cha:Preparation}
+
+本章では、VGMLを開発するために必要となる前提知識を説明する。
+
 \section{VDM++}
 \label{sec:vdm}
+
+形式手法の1つに、VDM(Vienna Development Method)がある\cite{}。
+VDMは、1970年代にIBMのウィーン研究所にてPL/Iコンパイラの正しさを検証するために開発された形式手法である。
+1996年には、形式仕様記述言語VDM-SLが標準となっている\cite{}。
+VDM++は、VDM-SLを基にオブジェクト指向拡張した言語であり、現在VDMの中では主流である。
+
+本研究では、VDM++仕様書を自動生成する。
+VDM++は、VDMTools\cite{}やVDMJ\cite{}などの支援ツールが揃っており、他の形式手法に比べ仕様の検証がしやすい利点がある。
+表\ref{table:vdm_block}に、VDM++の定義ブロックと、定義ブロックに対応する日本語での呼び方を示す。
+
+\begin{table}[t]
+    \begin{center}      
+        \caption{VDM++の定義ブロックと定義ブロックに対応する日本語での呼び方}\label{table:vdm_block}
+        \begin{tabular}{c|c}
+        VDM++の定義ブロック  & 日本語での呼び方　\\ \hline \hline
+        class & クラス \\ \hline
+        types	 & 型定義 \\ \hline
+        values  & 定数定義 \\ \hline
+        instance variables & インスタンス変数定義 \\ \hline
+        operations & 操作定義 \\ \hline 
+        functions  & 関数定義 \\ \hline 
+        \end{tabular}
+    \end{center}
+\end{table}
+
+本研究では、表\ref{table:vdm_block}におけるVDM++の定義ブロックであるクラス、型定義、定数定義、インスタンス変数定義、操作定義に対応する。
 
 \begin{table}[t]
     \begin{center}      

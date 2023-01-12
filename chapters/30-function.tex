@@ -95,7 +95,7 @@
 
 図\ref{fig:exis_connect_list}に示す連結リストを入力として、既存ツールの変換部が生成する単語リストの一部を図\ref{fig:exis_word_list}に、数値リストを図\ref{fig:exis_suti_list}に、それぞれ示す。
 
-\begin{figure}[tp]
+\begin{figure}[p]
     \begin{center}
         \includegraphics[width=1.0\columnwidth]{image/exis_transfer_structure.png}
         \caption{既存ツールにおける変換部の構造}
@@ -103,7 +103,7 @@
     \end{center}
 \end{figure}
 
-\begin{table}[tp]
+\begin{table}[p]
     \begin{center}      
         \caption{文字の種類によって重みづけをした値}\label{table:yusenti}
         \begin{tabular}{c|c|c}
@@ -145,7 +145,33 @@
 
 表\ref{table:exis_data_set}に、既存ツールにおける教師あり学習のデータセット数を示す。
 
-\begin{table}[t]
+既存ツールにおける機械学習部の処理の流れを、以下に示す。
+
+\begin{enumerate}
+    \item 学習済みモデル生成処理において、図\ref{fig:exis_teach}に示す教師データを入力とし、\ref{sec:logistic}節で述べた二項ロジスティック回帰分析を用いて学習済みモデルを生成する。
+    \label{exis_teach_model}
+    \item 判定リスト生成処理において、\ref{exis_teach_model}で生成した学習済みモデルと、図\ref{fig:exis_word_list}に示す単語リストを入力とし、単語リスト内の単語がVDM++仕様書に必要である確率を計算する。さらに、確率が0.5未満である単語に0の判定結果を、確率が0.5以上の単語に1の判定結果を与える。最後に、単語リストに単語の判定結果と確率を追加することによって判定リストを生成する。
+\end{enumerate}
+
+図\ref{fig:exis_teach}に示す教師データを基に生成した学習済みモデルと、図\ref{fig:exis_word_list}に示す単語リストを入力として、既存ツールの機械学習部が生成する判定リストの一部を、図\ref{fig:exis_judge_list}に示す。
+
+\begin{figure}[p]
+    \begin{center}
+        \includegraphics[width=1.0\columnwidth]{image/exis_machine_structure.png}
+        \caption{既存ツールにおける機械学習部の構造}
+        \label{fig:exis_machine_structure}
+    \end{center}
+\end{figure}
+
+\begin{figure}[p]
+    \begin{center}
+        \includegraphics[width=300]{image/exis_teach.png}
+        \caption{既存ツールの機械学習部が入力とする教師データの一部}
+        \label{fig:exis_teach}
+    \end{center}
+\end{figure}
+
+\begin{table}[p]
     \begin{center}
       \caption{既存ツールにおける教師データのデータセット数}
       \label{table:exis_data_set}
@@ -158,32 +184,6 @@
       \end{tabular}
     \end{center}
   \end{table}
-
-既存ツールにおける機械学習部の処理の流れを、以下に示す。
-
-\begin{enumerate}
-    \item 学習済みモデル生成処理において、図\ref{fig:exis_teach}に示す教師データを入力とし、\ref{sec:logistic}節で述べた二項ロジスティック回帰分析を用いて学習済みモデルを生成する。
-    \label{exis_teach_model}
-    \item 判定リスト生成処理において、\ref{exis_teach_model}で生成した学習済みモデルと、図\ref{fig:exis_word_list}に示す単語リストを入力とし、単語リスト内の単語がVDM++仕様書に必要である確率を計算する。さらに、確率が0.5未満である単語に0の判定結果を、確率が0.5以上の単語に1の判定結果を与える。最後に、単語リストに単語の判定結果と確率を追加することによって判定リストを生成する。
-\end{enumerate}
-
-図\ref{fig:exis_teach}に示す教師データを基に生成した学習済みモデルと、図\ref{fig:exis_word_list}に示す単語リストを入力として、既存ツールの機械学習部が生成する判定リストの一部を、図\ref{fig:exis_judge_list}に示す。
-
-\begin{figure}[tp]
-    \begin{center}
-        \includegraphics[width=1.0\columnwidth]{image/exis_machine_structure.png}
-        \caption{既存ツールにおける機械学習部の構造}
-        \label{fig:exis_machine_structure}
-    \end{center}
-\end{figure}
-
-\begin{figure}[tp]
-    \begin{center}
-        \includegraphics[width=300]{image/exis_teach.png}
-        \caption{既存ツールの機械学習部が入力とする教師データの一部}
-        \label{fig:exis_teach}
-    \end{center}
-\end{figure}
 
 \begin{figure}[tp]
     \begin{center}
