@@ -31,6 +31,27 @@ VDM++は、VDMTools\cite{}やVDMJ\cite{}などの支援ツールが揃ってお�
 \end{table}
 
 本研究では、表\ref{table:vdm_block}におけるVDM++の定義ブロックであるクラス、型定義、定数定義、インスタンス変数定義、操作定義に対応する。
+各定義ブロックの詳細を、以下に示す。
+
+\begin{itemize}
+    \item クラス\\クラスは、VDM++仕様書の構成単位である。オブジェクトはクラスのインスタンスである。
+    \item 型定義\\プログラムにおけるデータ型を表す。ただし、本研究で定義の対象とする型は、realのみとする。
+    \item 定数定義\\プログラムにおける定数を表す。
+    \item インスタンス変数定義\\オブジェクトの中に保持される属性を表す。
+    \item 操作定義\\オブジェクトの振る舞いを表すものの内、インスタンス変数にアクセスできる振る舞いを表す。
+\end{itemize}
+
+表\ref{table:vdm_syntax}に、本研究で対象としているVDM++の各定義ブロックの構文を示す。
+各定義ブロックには、それぞれ対応する構文がある。また、構文は、VDM++における記述方法であり、複数の要素で構成する。
+今回対象としている定義ブロックの構文の詳細を以下に示す。
+
+\begin{itemize}
+    \item class\\「class」の構文は「名前」の1つの要素を持つ。ここで、「名前」は定義するクラスの名前である。
+    \item types\\「types」の構文は、「名前」の1つの要素を持つ。ここで、「名前」は定義する型の名前である。
+    \item values\\「values」の構文は、「名前」と「値」の2つの要素を持つ。ここで、「名前」は定義する定数の名前、「値」は実数値である。
+    \item instance variables\\「instance variables」の構文は、「名前」と「型」の2つの要素を持つ。ここで、「名前」は定義するインスタンス変数の名前、「型」は定義する型の名前である。
+    \item operations\\「operations」の構文は、「名前」の1つの要素を持つ。ここで、「名前」は定義するメソッドの名前を表す。
+\end{itemize}
 
 \begin{table}[t]
     \begin{center}      
@@ -44,8 +65,6 @@ VDM++は、VDMTools\cite{}やVDMJ\cite{}などの支援ツールが揃ってお�
         operations & 名前 : () ==\textgreater real\\
                    & 名前()==\\
                    & return 0 ;\\ \hline 
-        functions  & 名前 : () -\textgreater real \\
-                   & 名前() == 0; \\ \hline 
         \end{tabular}
     \end{center}
 \end{table}
