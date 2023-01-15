@@ -17,14 +17,14 @@ VGMLに、Microsoft社のwordで記述した自然言語仕様書「インター
 この適用例では、学習済みモデルを生成するために使用した教師データの自然言語仕様書と同じ自然言語仕様書をVGMLに適用することによって、
 VGMLが、VDM++仕様書のクラス、型定義、定数定義、インスタンス変数定義、操作定義を生成できること、かつ、生成したVDM++仕様書の構文が正しいことを確認する。
 
-VGMLに仕様書Aを適用した結果、6つのファイルを生成した。
+VGMLに仕様書Aを適用した結果、「intern.vdmpp」、「インターンシップ.vdmpp」、「学生.vdmpp」、「企業.vdmpp」、「企業担当者.vdmpp」、「教員.vdmpp」の6つのファイルを生成した。
 VGMLが仕様書Aを基に生成した6つのファイルを、図\ref{fig:indication_vdm1}-図\ref{fig:indication_vdm6}に示す。
 図\ref{fig:indication_vdm1}-図\ref{fig:indication_vdm6}は、VDM++ Toolbox\cite{Tools}での出力の画面である。
 
 \begin{figure}[p]
     \begin{center}
     \includegraphics[width=300]{image/indication_vdm1.PNG}
-    \caption{VGMLが仕様書Aを基に生成したファイル1}
+    \caption{VGMLが仕様書Aを基に生成したファイル「intern.vdmpp」}
     \label{fig:indication_vdm1}
     \end{center}
 \end{figure}
@@ -32,7 +32,7 @@ VGMLが仕様書Aを基に生成した6つのファイルを、図\ref{fig:indic
 \begin{figure}[p]
     \begin{center}
     \includegraphics[width=300]{image/indication_vdm2.PNG}
-    \caption{VGMLが仕様書Aを基に生成したファイル2}
+    \caption{VGMLが仕様書Aを基に生成したファイル「インターンシップ.vdmpp」}
     \label{fig:indication_vdm2}
     \end{center}
 \end{figure}
@@ -40,7 +40,7 @@ VGMLが仕様書Aを基に生成した6つのファイルを、図\ref{fig:indic
 \begin{figure}[p]
     \begin{center}
     \includegraphics[width=300]{image/indication_vdm3.PNG}
-    \caption{VGMLが仕様書Aを基に生成したファイル3}
+    \caption{VGMLが仕様書Aを基に生成したファイル「学生.vdmpp」}
     \label{fig:indication_vdm3}
     \end{center}
 \end{figure}
@@ -48,7 +48,7 @@ VGMLが仕様書Aを基に生成した6つのファイルを、図\ref{fig:indic
 \begin{figure}[tp]
     \begin{center}
     \includegraphics[width=300]{image/indication_vdm4.PNG}
-    \caption{VGMLが仕様書Aを基に生成したファイル4}
+    \caption{VGMLが仕様書Aを基に生成したファイル「企業.vdmpp」}
     \label{fig:indication_vdm4}
     \end{center}
 \end{figure}
@@ -56,7 +56,7 @@ VGMLが仕様書Aを基に生成した6つのファイルを、図\ref{fig:indic
 \begin{figure}[tp]
     \begin{center}
     \includegraphics[width=300]{image/indication_vdm5.PNG}
-    \caption{VGMLが仕様書Aを基に生成したファイル5}
+    \caption{VGMLが仕様書Aを基に生成したファイル「企業担当者.vdmpp」}
     \label{fig:indication_vdm5}
     \end{center}
 \end{figure}
@@ -64,12 +64,13 @@ VGMLが仕様書Aを基に生成した6つのファイルを、図\ref{fig:indic
 \begin{figure}[tp]
     \begin{center}
     \includegraphics[width=300]{image/indication_vdm6.PNG}
-    \caption{VGMLが仕様書Aを基に生成したファイル6}
+    \caption{VGMLが仕様書Aを基に生成したファイル「教員.vdmpp」}
     \label{fig:indication_vdm6}
     \end{center}
 \end{figure}
 
-構文、および、タイプチェッカーを備えたVDM++ Toolboxは、生成したVDM++仕様書に対して警告を表示しなかった。
+構文、および、タイプチェッカーを備えたVDM++ Toolboxは、構文にエラーがあればエラー一覧のウィンドウに、警告を表示する。
+適用結果の6つのファイルを確認したところ、VDM++ Toolboxは、VGMLが生成したVDM++仕様書に対して警告を表示しなかった。
 このことから、VGMLに自然言語仕様書を適用することにより、
 クラス、型定義、定数定義、インスタンス変数定義、操作定義を記述したVDM++仕様書を生成できること、
 かつ、生成したVDM++仕様書の構文が正しいことを確認した。
