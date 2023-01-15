@@ -597,7 +597,7 @@ VGMLの識別子挿入処理は、型・定数定義リスト、インスタン�
 各識別子を単語に追加できるように、識別子挿入処理を改良する。
 さらに、型・定数定義識別子リストと、CLASSリストの要素数だけクラス毎識別子リストを生成する。
 VGMLのVDM++仕様書生成部における型・定数定義生成処理が生成する型・定数定義リストを、図\ref{fig:vgml_katateisu}に示す。
-図\ref{fig:vgml_katateisu}に示す型・定数定義リストと、図\ref{fig:instance_list}に示すインスタンス変数定義リスト、
+図\ref{fig:vgml_katateisu}に示す型・定数定義リスト、図\ref{fig:instance_list}に示すインスタンス変数定義リスト、
 図\ref{fig:operate_list}に示す操作定義リストを入力として、VGMLの識別子挿入処理が生成する型・定数定義識別子リストを図\ref{fig:vgml_katateisu_id_list}に、
 クラス毎識別子リストを図\ref{fig:vgml_sikibetushi_list}に、それぞれ示す。
 
@@ -631,7 +631,7 @@ VGMLのVDM++仕様書生成部における識別子挿入処理の流れを、�
                     \label{instance_word}
                     \item 文字列「instance variables」と\ref{instance_loop}i.の単語を、\ref{class_instance_list}のファイルに追加する。
                 \end{enumerate}
-            \item \ref{class_instance_list}のファイル名を、「\textless \ref{id_instance_word}で読み込んだ単語名\textgreater.csv」として保存する。
+            \item \ref{class_instance_list}で用意したファイル名を、「\textless \ref{id_instance_word}で読み込んだ単語名\textgreater.csv」として保存する。
             \label{save_class_instance}
         \end{enumerate}
     \item 操作定義リストの行の数だけ、以下の処理を繰り返す。
@@ -704,6 +704,7 @@ VGMLのVDM++仕様書生成部におけるVDM++仕様書生成処理の流れを
             \item \ref{shikibetu_elem}で読み込んだ行の1列目の識別子が「operations」である場合、\ref{add_sikibetushi}で追加した「operations」の次の行に、表{\ref{table:vdm_syntax}}の構文に従って、\ref{shikibetu_elem}で読み込んだ行の2列目の要素をVDM++仕様書の構文の「名前」に挿入する。
         \end{enumerate}
     \item \ref{vdm_file}で用意したファイルの最下行に、「end \textless \ref{read_class}で読み込んだ行の2列目の要素 \textgreater」を追加する。
+    \item \ref{vdm_file}のファイル名を、「\textless \ref{read_class}で読み込んだ単語名\textgreater.vdmpp」として保存する。
 \end{enumerate}
 
 この\ref{katateisu_vdm}と\ref{vdm_file}のファイルが、図\ref{fig:4_vdm}に示すVDM++仕様書である。
@@ -711,13 +712,13 @@ VGMLのVDM++仕様書生成部におけるVDM++仕様書生成処理の流れを
 例として、図\ref{fig:vgml_sikibetushi_list}のファイルの内、「企業担当者」クラスを記述したファイルの、1行目、2行目、4行目について説明する。
 
 まず、1行目について説明する。2列目の単語を読み取る。「class」の構文「class 名前」が、2列目の「企業担当者」を「名前」に関連付ける。
-そして、空のファイルを生成し、「class 企業担当者」を挿入する。
+そして、空のファイルを生成し、「class 企業担当者」を記述する。
 
-次に、2行目について説明する。1列目の識別子を読み取り、「instance variables」の次の行に記述する。
+次に、2行目について説明する。1列目の識別子「instance variables」を読み取る。
 「instance variables」の構文「public 名前 : 型;」が、2列目の「企業担当者名」を「名前」に関連付ける。
 さらに、「企業担当者名」から、1行2列目の「企業担当者」を除いた「名」を生成し、「名」を「型」に関連付ける。
-そして、VDM ++仕様書のブロック「instance variables」の次の行に「public  = 企業担当者名 : 名;」を挿入する。
+そして、VDM ++仕様書のブロック「instance variables」の次の行に「public  = 企業担当者名 : 名;」を記述する。
 
-最後に、4行目について説明する。1列目の識別子を読み取り、「operations」の次の行に記述する。
+最後に、4行目について説明する。1列目の識別子「operations」を読み取る。
 「operations」の構文「名前 : ()==\textgreater real \textless 改行 \textgreater 名前()== \textless 改行 \textgreater return 0;」が、2列目の「学生情報一覧確認」を「名前」に関連付ける。
-そして、VDM ++仕様書のブロック「operations」の次の行に「学生情報一覧確認 : ()==\textgreater real \textless 改行 \textgreater 学生情報一覧確認()== \textless 改行 \textgreater return 0;」を挿入する。
+そして、VDM ++仕様書のブロック「operations」の次の行に「学生情報一覧確認 : ()==\textgreater real \textless 改行 \textgreater 学生情報一覧確認()== \textless 改行 \textgreater return 0;」を記述する。
