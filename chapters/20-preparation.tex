@@ -132,22 +132,25 @@ $\beta_{0}$は、定数であり、$\beta_{1}～\beta_{x}$は、偏回帰変数�
 \end{equation}
 
 判定結果が3つ以上の予測に使用できるロジスティック回帰を作成するために、多項ロジスティック回帰がある\cite{multinomial_logistic}。
-目的変数がA、B、Cの3種類である場合、式\ref{}-式\ref{}の3つの式により、A。
+多項ロジスティック回帰は、目的変数がA、B、Cの3種類である場合、式\ref{eq:multi_logisticA}-式\ref{eq:multi_logisticC}の3つの式により、A、B、Cの確率をそれぞれ計算する。
+さらに、最も大きい確率である目的変数を、判定結果とする。
 
-\begin{equation}\label{eq:logistic}
-    y = \frac{exp[(\beta_{10}+ \beta_{11}\alpha_{11}+\beta_{12}\alpha_{12}+...+\beta_{1x}\alpha_{1x})]}{exp[(\beta_{20}+ \beta_{21}\alpha_{21}+\beta_{22}\alpha_{22}+...+\beta_{2x}\alpha_{2x})]+exp[(\beta_{20}+ \beta_{21}\alpha_{21}+\beta_{22}\alpha_{22}+...+\beta_{2x}\alpha_{2x})]}
+\begin{equation}\label{eq:multi_logisticA}
+    p_{A} = \frac{exp[(\beta_{10}+ \beta_{11}\alpha_{1}+\beta_{12}\alpha_{2}+...+\beta_{1x}\alpha_{x})]}{exp[(\beta_{20}+ \beta_{21}\alpha_{1}+\beta_{22}\alpha_{2}+...+\beta_{2x}\alpha_{x})]+exp[(\beta_{30}+ \beta_{31}\alpha_{1}+\beta_{32}\alpha_{2}+...+\beta_{3x}\alpha_{x})]}
 \end{equation}
 
-\begin{equation}\label{eq:logistic}
-    y = \log{(\frac{C}{A})}= \beta_{0}+ \beta_{1}\alpha_{1}+\beta_{2}\alpha_{2}+...+\beta_{x}\alpha_{x}
+\begin{equation}\label{eq:multi_logisticB}
+    p_{B} = \frac{exp[(\beta_{20}+ \beta_{21}\alpha_{1}+\beta_{22}\alpha_{2}+...+\beta_{2x}\alpha_{x})]}{exp[(\beta_{10}+ \beta_{11}\alpha_{1}+\beta_{12}\alpha_{2}+...+\beta_{1x}\alpha_{x})]+exp[(\beta_{30}+ \beta_{31}\alpha_{1}+\beta_{32}\alpha_{2}+...+\beta_{3x}\alpha_{x})]}
 \end{equation}
 
+\begin{equation}\label{eq:multi_logisticC}
+    p_{C} = \frac{exp[(\beta_{30}+ \beta_{31}\alpha_{1}+\beta_{32}\alpha_{2}+...+\beta_{3x}\alpha_{x})]}{exp[(\beta_{10}+ \beta_{11}\alpha_{1}+\beta_{12}\alpha_{2}+...+\beta_{1x}\alpha_{x})]+exp[(\beta_{20}+ \beta_{21}\alpha_{1}+\beta_{22}\alpha_{2}+...+\beta_{2x}\alpha_{x})]}
+\end{equation}
 
-
-既存ツールは、単語をVDM++仕様書に必要であるか否かの判定を行うために、機械学習のモデルとして、2値ロジスティック回帰モデルを用いる。
-   
-2値ロジスティック回帰のアルゴリズムを用いるモデルは「教師あり学習」手法である。
+2値ロジスティック回帰と多項ロジスティック回帰のアルゴリズムを用いるモデルは「教師あり学習」手法である。
 このため、モデルをトレーニングするための結果をあらかじめ含んだデータセットを用意する必要があり、
 データをロジスティック関数にフィッティングすることで事象の発生確率を予測する。
 
-本研究では、単語に対してVDM++仕様書に必要な単語であるか否かの判定を行うために、機械学習のモデルとし
+既存ツールは、単語を、VDM++仕様書に必要である単語と、VDM++仕様書に必要でない単語の2つに分類するために、機械学習のモデルとして、2値ロジスティック回帰モデルを用いる。
+VGMLは、単語を、VDM++仕様書に必要でない単語、VDM++仕様書に必要であるが、クラスの候補ではない単語、VDM++仕様書に必要であり、かつ、クラスの候補である単語の
+3つに分類するために、機械学習のモデルとして、多項ロジスティック回帰モデルを用いる。
