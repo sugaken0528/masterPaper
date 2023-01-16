@@ -132,12 +132,10 @@ $\beta_{0}$は、定数であり、$\beta_{1}～\beta_{x}$は、偏回帰変数�
 \end{equation}
 
 判定結果が3つ以上の予測に使用できるロジスティック回帰を作成するために、多項ロジスティック回帰がある\cite{multinomial_logistic}。
-多項ロジスティック回帰モデルでは、3つ以上ある目的変数の値のうち、1つを基準としたロジスティック回帰モデルを、
-目的変数の数より1つ少ない数だけ作成する。
-目的変数がA,B,Cの3種類であり、Aを基準として考えた場合、式\ref{}と式\ref{}の2つの回帰モデルを作成する。
+目的変数がA、B、Cの3種類である場合、式\ref{}-式\ref{}の3つの式により、A。
 
 \begin{equation}\label{eq:logistic}
-    y = \log{(\frac{B}{A})}= \beta_{0}+ \beta_{1}\alpha_{1}+\beta_{2}\alpha_{2}+...+\beta_{x}\alpha_{x}
+    y = \frac{exp[(\beta_{10}+ \beta_{11}\alpha_{11}+\beta_{12}\alpha_{12}+...+\beta_{1x}\alpha_{1x})]}{exp[(\beta_{20}+ \beta_{21}\alpha_{21}+\beta_{22}\alpha_{22}+...+\beta_{2x}\alpha_{2x})]+exp[(\beta_{20}+ \beta_{21}\alpha_{21}+\beta_{22}\alpha_{22}+...+\beta_{2x}\alpha_{2x})]}
 \end{equation}
 
 \begin{equation}\label{eq:logistic}
