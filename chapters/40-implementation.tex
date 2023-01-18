@@ -1,6 +1,6 @@
 \chapter{VGMLの実装}\label{cha:Implementation}
 
-本研究では、\ref{cha:Function}章で示した、既存ツールの有用性を向上するために、VDM++仕様書における以下の3つの構文を生成する手法を提案する。
+本研究では、\ref{cha:Function}章で述べた既存ツールの有用性を向上するために、VDM++仕様書における以下の3つの構文を生成する手法を提案する。
 さらに、提案手法を既存ツールに適用し、機械学習を活用したVDM++仕様書自動生成ツールVGMLを開発する。
 
 \begin{itemize}
@@ -49,7 +49,7 @@ VGMLの形態素解析部の構造を、図\ref{fig:vgml_mor_structure}に示す
 単語連結処理の改良の詳細を説明するにあたり、
 既存ツールとVGMLの分かち書き処理が生成する分かち書きリストの一部を図\ref{fig:exis_wakati}に、
 図\ref{fig:exis_wakati}に示す分かち書きリストの一部を入力として、既存ツールの単語連結処理が生成する連結リストの一部を図\ref{fig:exis_connect}に、それぞれ示す。
-図\ref{fig:exis_wakati}に示す分かち書きリストの一部を分かち書き処理に入力した場合、既存ツールの単語連結処理は、図\ref{fig:exis_connect}に示すように、「企業」、「一覧」、「確認」を別の単語として生成する。
+図\ref{fig:exis_wakati}に示す分かち書きリストの一部を単語連結処理に入力した場合、既存ツールの単語連結処理は、図\ref{fig:exis_connect}に示すように、「企業」、「一覧」、「確認」を別の単語として生成する。
 そのため、「企業の一覧を確認する」という意味を持つ単語を抽出できない。
 したがって、自然言語仕様書から抽出した単語をVDM++仕様書に記述する際に、適切な単語を記述できない。
 
@@ -118,7 +118,7 @@ VGMLは、機械学習に必要なパラメータとして、各単語にTF-IDF�
 \begin{enumerate}[label=\textbf{\Alph*}.]
     \item VDM++仕様書に必要でない単語
     \label{unnecessary}
-    \item VDM++仕様書に必要であるが、クラスの候補ではない単語
+    \item VDM++仕様書に必要であるがクラスの候補ではない単語
     \label{nonclass}
     \item VDM++仕様書に必要であり、かつ、クラスの候補である単語
     \label{class}
@@ -220,16 +220,16 @@ VGMLが生成する単語リストは、単語名と、各単語に対して算�
 この列数5の一時ファイルの末尾に新たな要素を追加した1行は、(連結リストの単語、TF-IDF値、出現回数、優先値、連結回数、概念レベル)で構成する。
 このファイルが、図\ref{fig:vgml_word_list}に示す単語リストである。
 
-図\ref{fig:vgml_word_list}から、概念レベルの値と自然言語仕様書内の単語に以下のような特徴を確認した。
+また、自然言語仕様書内の単語と、概念レベルの値の関係を確認した結果、以下のような特徴を確認することができた。
 
 \begin{itemize}
-    \item 概念レベルの値が大きすぎる単語(``システム''など)は、VDM++仕様書に必要でない単語の可能性が高い。
-    \item 概念レベルの値が小さすぎる単語 (``id''、``パスワード''など)は、VDM++仕様書に必要でない単語である可能性が高い。しかし、クラスの候補となる単語に接続する場合、そのクラスが持つインスタンス変数となる可能性が高い。
-    \item 大きすぎる概念レベルの値と、小さすぎる概念レベルの値の中間程度の概念レベルの値である単語(``企業''、``企業担当者''など)の内、概念レベルの値が大きい単語は、クラスの候補である単語の可能性が高い。
-    \item 上記の項目にあてはまらない単語(``年度''など)は、クラスの候補でないが、VDM++仕様書に必要である単語の可能性が高い。
+    \item 概念レベルの値が大きすぎる単語(図\ref{fig:vgml_word_list}に示す``システム''など)は、VDM++仕様書に必要でない単語の可能性が高い。
+    \item 概念レベルの値が小さすぎる単語 (図\ref{fig:vgml_word_list}に示す``id''、``パスワード''など)は、VDM++仕様書に必要でない単語である可能性が高い。しかし、クラスの候補となる単語に接続する場合、そのクラスが持つインスタンス変数となる可能性が高い。
+    \item 大きすぎる概念レベルの値と、小さすぎる概念レベルの値の中間程度の概念レベルの値である単語(図\ref{fig:vgml_word_list}に示す``企業''、``企業担当者''など)の中で、概念レベルの値が大きい単語は、クラスの候補である単語の可能性が高い。
+    \item 上記の項目にあてはまらない単語(図\ref{fig:vgml_word_list}に示す``年度''など)は、クラスの候補でないが、VDM++仕様書に必要である単語の可能性が高い。
 \end{itemize}
 
-VGMLは、上記の特徴に基づいて、各単語をUNNECESSARY、NONCLASS、CLASSのいずれかに分類する。
+本研究では、上述した4つの特徴に基づいて、クラスの候補である単語の分類を行うために、概念レベルの値を機械学習のパラメータとして追加する。
 
 \begin{figure}[t]
     \begin{center}
@@ -272,17 +272,17 @@ VGMLの教師データの判定結果はUNNECESSARY、NONCLASS、CLASSのいず�
 \begin{itemize}
     \item CLASS
         \begin{itemize}
-            \item 自然言語仕様書が対象とするシステムにおいて、属性や振る舞いなどの情報を持ち、システムの外部に位置するアクターではない名詞。
+            \item 自然言語仕様書内の単語の中で、属性や振る舞いなどの情報を持つ可能性があり、かつ、システムの外部に位置するアクターにはなりえない単語。
         \end{itemize}
     \item NONCLASS
         \begin{itemize}
-            \item 自然言語仕様書が対象とするシステムにおいて、クラスが持つ情報であり、自クラスまたは他のクラスが振る舞いを行う際に必要とする情報である名詞。
-            \item 自然言語仕様書が対象とするシステムにおいて、クラスが持つ振る舞いを表す名詞。
-            \item 自然言語仕様書が対象とするシステムにおいて、制約条件を表す名詞。
+            \item 自然言語仕様書内の単語の中で、クラスが持つ情報である可能性があり、かつ、自クラスまたは他のクラスが振る舞いを行う際に必要とする情報の可能性がある単語。
+            \item 自然言語仕様書内の単語の中で、クラスが持つ振る舞いを表す可能性のある単語。
+            \item 自然言語仕様書内の単語の中で、制約条件を表す可能性のある単語。
         \end{itemize}
     \item UNNECESSARY
         \begin{itemize}
-            \item CLASSおよびNONCLASSのいずれにも属さない名詞。
+            \item CLASSおよびNONCLASSのいずれにも属さない単語。
         \end{itemize}
 \end{itemize}
 
@@ -558,7 +558,7 @@ VGMLにおけるVDM++仕様書生成部の操作定義生成処理の流れを�
                     \label{search_doshi_word}
                     \item \ref{loop_sentence2}ii.の検索結果に対し、以下のいずれかの処理を行う。
                         \begin{itemize}
-                            \item 単語が存在しなかった場合、\ref{read_sentence}に戻る。
+                            \item 単語が存在しなかった場合、\ref{read_sentence}i.に戻る。
                             \item 単語が存在した場合、\ref{loop_sentence}i.の単語が存在する\ref{method_list}のファイル内の同じ行の末尾に、\ref{loop_sentence2}i.の単語を追加する。
                         \end{itemize}
                 \end{enumerate}
@@ -600,6 +600,8 @@ VGMLの型・定数定義生成処理が生成する型・定数定義リスト�
 図\ref{fig:vgml_katateisu_list}に示す型・定数定義リスト、図\ref{fig:instance_list}に示すインスタンス変数定義リスト、
 図\ref{fig:operate_list}に示す操作定義リストを入力として、VGMLの識別子挿入処理が生成する型・定数定義識別子リストを図\ref{fig:vgml_katateisu_id_list}に、
 クラス毎識別子リストを図\ref{fig:vgml_sikibetushi_list}に、それぞれ示す。
+図\ref{fig:vgml_sikibetushi_list}に示すクラス毎識別子リストは、「intern.csv」、「企業.csv」、「教員.csv」、「学生.csv」、「インターンシップ.csv」、「企業担当者.csv」
+の6つのファイル、すなわち、CLASSリストの要素数+1のファイル数で構成する。
 
 \begin{figure}[t]
     \begin{center}
@@ -666,7 +668,7 @@ VGMLのVDM++仕様書生成部における識別子挿入処理の流れを、�
         \end{enumerate}
 \end{enumerate}
 
-\ref{class_instance_list}のファイルは、CLASSリストの要素数だけ生成し、1つのファイルの1行目は、(class, クラスの候補である単語名)、
+\ref{class_instance_list}のファイルの1行目は、(class, クラスの候補である単語名)、
 2行目以降は、(instance variables,インスタンス変数定義の候補である単語名)、 (operations,操作定義の候補である単語名)のいずれかで構成する。
 このファイルが、図\ref{fig:vgml_sikibetushi_list}に示すクラス毎識別子リストである。
 
@@ -678,7 +680,8 @@ VGMLのVDM++仕様書生成処理は、型・定数定義識別子リストと�
 既存ツールの型定義と定数定義に加え、クラス、インスタンス変数定義、操作定義を記述したVDM++仕様書を生成する。
 図\ref{fig:vgml_katateisu_id_list}に示す型・定数定義識別子リストと、図\ref{fig:vgml_sikibetushi_list}に示すクラス毎識別子リストを入力として、
 VGMLのVDM++仕様書生成処理が生成するVDM++仕様書を、図\ref{fig:4_vdm}に示す。
-VGMLが生成するVDM++仕様書は、CLASSリストの要素数+1のファイル数で構成する。
+図\ref{fig:4_vdm}に示すVDM++仕様書は、「intern.vdmpp」、「企業担当者.vdmpp」、「企業.vdmpp」、「インターンシップ.vdmpp」、「学生.vdmpp」、「教員.vdmpp」
+の6つのファイル、すなわち、CLASSリストの要素数+1のファイル数で構成する。
 
 \begin{figure}[p]
     \begin{center}
@@ -725,7 +728,7 @@ VGMLのVDM++仕様書生成部におけるVDM++仕様書生成処理の流れを
 
 この\ref{katateisu_vdm}と\ref{vdm_file}のファイルが、図\ref{fig:4_vdm}に示すVDM++仕様書である。
 
-例として、図\ref{fig:vgml_sikibetushi_list}のファイルの内、「企業担当者」クラスを記述したファイルの、1行目、2行目、4行目について説明する。
+例として、図\ref{fig:vgml_sikibetushi_list}のファイルの内、「企業担当者.vdmpp」の、1行目、2行目、4行目について説明する。
 
 まず、1行目について説明する。2列目の単語を読み取る。「class」の構文「class 名前」が、2列目の「企業担当者」を「名前」に関連付ける。
 そして、空のファイルを生成し、「class 企業担当者」を記述する。
